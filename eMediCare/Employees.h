@@ -67,30 +67,6 @@ public:
     }
 };
 
-class Doctor : public Employee {
-private:
-
-public:
-    Doctor() {}
-    Doctor(string id, string password, string name, string gender, string contact) :
-        Employee(id, password, "Doctor", ("Dr. " + name), gender, contact) {}
-
-    void addToFile() {
-        ofstream outFile;
-        string data;
-
-        data = id + " " + password + " " + name + " " + gender + " " + contact;
-
-        outFile.open("Doctor.txt");
-        if (!outFile) {
-            //error message(depends if we are using forms or not) 
-            return;
-        }
-        outFile << data << endl;
-        outFile.close();
-    }
-};
-
 class Patients :public Person {
 private:
     string id;
@@ -115,7 +91,7 @@ public:
         Medicine[medicineCount] = medicine;
         medicineCount++;
     }
-
+    
     void addToFile() {
         ofstream outFile;
         string data;
@@ -169,14 +145,14 @@ public:
         patients[NoOfPatients] = Patients(name, contact, gender, id, age);
         NoOfPatients++;
     }
-
+    //Tells the name and id of assigned patients to a particular nurse
     void showAssignedPatients() {
         cout << "Assigned Patients:" << endl;
         for (int i = 0; i < NoOfPatients; i++) {
             cout << "ID: " << patients[i].getID() << ", Name: " << patients[i].getName() << endl;
         }
     }
-
+    //assign medicine to patient
     void assignMedicine(string medName) {
         for (int i = 0; i < NoOfPatients; i++) {
             if (patients[i].getName() == name) {
@@ -184,6 +160,38 @@ public:
                 break;
             }
         }
+    }
+};
+
+class Doctor : public Employee {
+private:
+
+public:
+    Doctor() {}
+    Doctor(string id, string password, string name, string gender, string contact) :
+        Employee(id, password, "Doctor", ("Dr. " + name), gender, contact) {}
+
+    void addToFile() {
+        ofstream outFile;
+        string data;
+
+        data = id + " " + password + " " + name + " " + gender + " " + contact;
+
+        outFile.open("Doctor.txt");
+        if (!outFile) {
+            //error message(depends if we are using forms or not) 
+            return;
+        }
+        outFile << data << endl;
+        outFile.close();
+    }
+
+    void assignNurse(Nurse& nurse, string name, string contact, string gender, string id, string age) {
+        nurse.assignPatient(name, contact, gender, id, age);
+    }
+
+    void prescribeMedicine(Nurse& nurse, string medName) {
+        nurse.assignMedicine(medName);
     }
 };
 
