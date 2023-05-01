@@ -4,9 +4,11 @@
 #include <chrono>
 #include <ctime>
 using namespace std;
-//a function that returns a boolean, in case the current time and weekday matches with the given time and weekday
 
-bool reminder(string input_weekday, int input_hour, int input_minute)
+
+
+
+bool reminder(string input_weekday, int input_hour, int input_minute)      //a function that returns a boolean, in case the current time and weekday matches with the given time and weekday
 {
     // Get current time and weekday
     auto now = chrono::system_clock::now();                                // gets the current time from the system clock
@@ -27,12 +29,13 @@ bool reminder(string input_weekday, int input_hour, int input_minute)
     {
         if (weekdays[i].compare(input_weekday) == 0)
         {
+
             input_weekday_index = i;
             break;
         }
     }
 
-    // If input weekday is not valid, display error message and exit
+    // If input weekday is not valid exit
     if (input_weekday_index == -1)
     {
         return false;
