@@ -19,7 +19,7 @@ bool reminder(string input_weekday, int input_hour, int input_minute)      //a f
     localtime_s(&ltm, &current_time);
     int current_hour = ltm.tm_hour;
     int current_minute = ltm.tm_min;
-    string weekdays[7] = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+    string weekdays[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday"};
     string current_weekday = weekdays[ltm.tm_wday];
 
 
