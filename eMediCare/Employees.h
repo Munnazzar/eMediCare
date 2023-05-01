@@ -41,30 +41,6 @@ public:
     }
 };
 
-class Admin : public Employee {
-private:
-
-public:
-    Admin() {}
-    Admin(string id, string password, string name, string gender, string contact) :
-        Employee(id, password, "Admin", name, gender, contact) {}
-
-    void addToFile() {
-        ofstream outFile;
-        string data;
-
-        data = id + " " + password + " " + name + " " + gender + " " + contact;
-
-        outFile.open("Admin.txt");
-        if (!outFile) {
-            //error message(depends if we are using forms or not) 
-            return;
-        }
-        outFile << data << endl;
-        outFile.close();
-    }
-};
-
 class Patients :public Person {
 private:
     string id;
@@ -76,10 +52,11 @@ private:
 
 public:
     static int PateintsCount;
-    Patients() {}
+    Patients() { Medicine = new string[5]; PateintsCount++; } //max 5 medicines at a time
     Patients(string name, string contact, string gender, string id, string age) :
         Person(name, contact, gender), id(id), age(age), medicineCount(0) {
         PateintsCount++;
+        Medicine = new string[5];
     }
 
     string getID() {
@@ -132,10 +109,11 @@ private:
     int NoOfPatients;
     string* PatientsId;
 public:
-    Nurse() { patients = new Patients[5]; } //assigning max 5 patients to each nurse
+    static int NursesCount;
+    Nurse() { PatientsId = new string[5]; } //assigning max 5 patients to each nurse
     Nurse(string id, string password, string name, string gender, string contact) :
         Employee(id, password, "Nurse", name, gender, contact), NoOfPatients(0) {
-        patients = new Patients[5];
+        PatientsId = new string[5];
     }
 
     string getID() {
@@ -190,10 +168,22 @@ class Doctor : public Employee {
 private:
     int NoOfPatients;
     string* patientsId;
+   
 public:
-    Doctor() {}
+    static int DoctorsCount;
+    Doctor() { patientsId = new string[5]; }//The doctor will deal max 5 patients at a time
     Doctor(string id, string password, string name, string gender, string contact) :
-        Employee(id, password, "Doctor", ("Dr. " + name), gender, contact) {}
+        Employee(id, password, "Doctor", ("Dr. " + name), gender, contact) {
+        patientsId = new string[5];
+    }
+
+    void setPatientId(string id) {
+        patientsId[NoOfPatients++] = id;
+    }
+
+    string getID() {
+        return id;
+    }
 
     void addToFile() {
         ofstream outFile;
@@ -214,12 +204,17 @@ public:
     void prescribeMedicine(Nurse& nurse, string medName, Patients& patient) {
         nurse.assignMedicine(medName, &patient);
     }
+
+    static void incrementCount() {
+        DoctorsCount++;
+    }
 };
 
 class Admin : public Employee {
 private:
-
+    
 public:
+    static int AdminsCount;
     Admin() {}
     Admin(string id, string password, string name, string gender, string contact) :
         Employee(id, password, "Admin", name, gender, contact) {}
@@ -245,10 +240,14 @@ public:
     }
 
     static void incrementCount() {
-        DoctorsCount++;
+        AdminsCount++;
     }
-};
 
+};
+int Doctor::DoctorsCount = 0;
+int Nurse::NursesCount = 0;
+int Admin::AdminsCount = 0;
+int Patients::PateintsCount = 0;
 //function called at the start of the program, loads all the data stored in files to arrays
 bool initializeAll(Doctor* doctors, Nurse* nurses, Admin* admins, Patients* patients) {
     //can update later in someway to dynamically allocate memory to required size of arrays
@@ -256,13 +255,37 @@ bool initializeAll(Doctor* doctors, Nurse* nurses, Admin* admins, Patients* pati
     nurses = new Nurse[10];
     admins = new Admin[10];
 
-    Doctor::DoctorsCount = 0;
-    Nurse::NursesCount = 0;
-    Admin::AdminsCount = 0;
-    Patients::PateintsCount = 0;
+    //Doctor::DoctorsCount = 0;
+    //Nurse::NursesCount = 0;
+    //Admin::AdminsCount = 0;
+    //Patients::PateintsCount = 0;
 
     ifstream inFile;
-    // inFile;
-       //  while ();
+    inFile.open("Doctor.dat", ios::in);
+    while (inFile.read((char*)(&doctors[Doctor::DoctorsCount]), sizeof(Doctor))) {
+        Doctor::incrementCount;
+    }
+
+    inFile.open("Nurse.dat", ios::in);
+    while (inFile.read((char*)(&nurses[Nurse::NursesCount]), sizeof(Nurse))) {
+        Nurse::incrementCount;
+    }
+
+    inFile.open("Admin.dat", ios::in);
+    while (inFile.read((char*)(&admins[Admin::AdminsCount]), sizeof(Admin))) {
+        Admin::incrementCount;
+    }
+
+    inFile.open("Patients.dat", ios::in);
+    while (inFile.read((char*)(&patients[Patients::PateintsCount]), sizeof(Patients))) {
+        Patients::incrementCount;
+
+    }
     return true;
 }
+int main() {
+
+}
+
+
+
