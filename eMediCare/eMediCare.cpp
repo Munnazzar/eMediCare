@@ -7,7 +7,7 @@ using namespace std;
 
 int main()
 {
-	reminder("Sunday", 13, 48);
+	reminder("Sunday", 19, 05);
 	return 0;
 }
 

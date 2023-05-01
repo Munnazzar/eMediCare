@@ -45,12 +45,10 @@ bool reminder(string input_weekday, int input_hour, int input_minute)
     // Compare total minutes and weekday
     if (current_total_minutes == input_total_minutes && current_weekday == weekdays[input_weekday_index])
     {
-        cout << "The current time and weekday match the input time and weekday." << endl;
-        return true;
+        return true;        //returns true if the given time and weekday matches with the current time and weekday
     }
     else
     {
-        cout << "The current time and weekday do not match the input time and weekday." << endl;
-        return false;
+        return false;       //returns false if the given time and weekday does not matches with the current time and weekday
     }
 }
