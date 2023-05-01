@@ -5,9 +5,9 @@
 #include "ReminderFunction.h"
 using namespace std;
 
-int main()
-{
-	reminder("Sunday", 13, 48);
-	return 0;
-}
+//int main()
+//{
+//	reminder("Sunday", 13, 48);
+//	return 0;
+//}
 

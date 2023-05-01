@@ -43,33 +43,11 @@ public:
     }
 };
 
-class Admin : public Employee {
-private:
-
-public:
-    Admin() {}
-    Admin(string id, string password, string name, string gender, string contact) :
-        Employee(id, password, "Admin", name, gender, contact) {}
-
-    void addToFile() {
-        ofstream outFile;
-        string data;
-
-        data = id + " " + password + " " + name + " " + gender + " " + contact;
-
-        outFile.open("Admin.txt");
-        if (!outFile) {
-            //error message(depends if we are using forms or not) 
-            return;
-        }
-        outFile << data << endl;
-        outFile.close();
-    }
-};
-
 class Patients :public Person {
 private:
     string id;
+    string assignedNurseId;
+    string assignedDoctorId;
     string age;
     int medicineCount;
     string* Medicine;
@@ -81,6 +59,22 @@ public:
 
     string getID() {
         return id;
+    }
+
+    void setNurseID(string id) {
+        assignedNurseId = id;
+    }
+
+    void setDoctorID(string id) {
+        assignedDoctorId = id;
+    }
+
+    string getNurseID() {
+        return assignedNurseId;
+    }
+
+    string getDoctorID() {
+        return assignedDoctorId;
     }
 
     string getName() {
@@ -111,12 +105,20 @@ public:
 class Nurse : public Employee {
 private:
     int NoOfPatients;
-    Patients* patients;
+    string* PatientsId;
 public:
-    Nurse() { patients = new Patients[5]; } //assigning max 5 patients to each nurse
+    Nurse() { PatientsId = new string[5]; } //assigning max 5 patients to each nurse at a time
     Nurse(string id, string password, string name, string gender, string contact) :
         Employee(id, password, "Nurse", name, gender, contact), NoOfPatients(0) {
-        patients = new Patients[5];
+            PatientsId = new string[5];
+    }
+
+    string getID() {
+        return id;
+    }
+
+    void setPatientId(string id) {
+        PatientsId[NoOfPatients++] = id;
     }
 
     void addToFile() {
@@ -141,22 +143,18 @@ public:
             return true;
     }
 
-    void assignPatient(string name, string contact, string gender, string id, string age) {
-        patients[NoOfPatients] = Patients(name, contact, gender, id, age);
-        NoOfPatients++;
-    }
     //Tells the name and id of assigned patients to a particular nurse
-    void showAssignedPatients() {
-        cout << "Assigned Patients:" << endl;
+    void showAssignedPatients(Patients& patient) {
+        //cout << "Assigned Patients:" << endl;
         for (int i = 0; i < NoOfPatients; i++) {
-            cout << "ID: " << patients[i].getID() << ", Name: " << patients[i].getName() << endl;
+           // cout << "ID: " << patient[i].getID() << ", Name: " << patient[i].getName() << endl;
         }
     }
     //assign medicine to patient
-    void assignMedicine(string medName) {
+    void assignMedicine(string medName, Patients* patient) {
         for (int i = 0; i < NoOfPatients; i++) {
-            if (patients[i].getName() == name) {
-                patients[i].setMedicine(medName);
+            if (patient[i].getName() == name) {
+                patient[i].setMedicine(medName);
                 break;
             }
         }
@@ -165,11 +163,25 @@ public:
 
 class Doctor : public Employee {
 private:
-
+    int NoOfPatients;
+    string* patientsId;
 public:
-    Doctor() {}
+    Doctor() { patientsId = new string[5]; }//assigning max 5 patients to each doctor at a time
     Doctor(string id, string password, string name, string gender, string contact) :
-        Employee(id, password, "Doctor", ("Dr. " + name), gender, contact) {}
+        Employee(id, password, "Doctor", ("Dr. " + name), gender, contact), NoOfPatients(0) {
+            patientsId = new string[5];
+    }
+    int getNoOfPatients() {
+        return NoOfPatients;
+    }
+
+    void setPatientId(string id) {
+        patientsId[NoOfPatients++] = id;
+    }
+
+    string getID() {
+        return id;
+    }
 
     void addToFile() {
         ofstream outFile;
@@ -185,13 +197,43 @@ public:
         outFile << data << endl;
         outFile.close();
     }
-
-    void assignNurse(Nurse& nurse, string name, string contact, string gender, string id, string age) {
-        nurse.assignPatient(name, contact, gender, id, age);
+    //assigns nurse to a particular patient
+    void assignNurse(Nurse& nurse, Patients& patient, string id) {
+        nurse.setPatientId(patient.getID());
+        patient.setNurseID(nurse.getID());
     }
+    //prescribes medicine to nurse
+    void prescribeMedicine(Nurse& nurse, string medName, Patients& patient) {
+        nurse.assignMedicine(medName, &patient);
+    }
+};
 
-    void prescribeMedicine(Nurse& nurse, string medName) {
-        nurse.assignMedicine(medName);
+class Admin : public Employee {
+private:
+
+public:
+    Admin() {}
+    Admin(string id, string password, string name, string gender, string contact) :
+        Employee(id, password, "Admin", name, gender, contact) {}
+
+    void addToFile() {
+        ofstream outFile;
+        string data;
+
+        data = id + " " + password + " " + name + " " + gender + " " + contact;
+
+        outFile.open("Admin.txt");
+        if (!outFile) {
+            //error message(depends if we are using forms or not) 
+            return;
+        }
+        outFile << data << endl;
+        outFile.close();
+    }
+    //assigns doctor to a particular patient
+    void assignDoctor(Doctor& doctor, Patients& patient, string id) {
+        doctor.setPatientId(patient.getID());
+        patient.setDoctorID(doctor.getID());
     }
 };
 
@@ -203,4 +245,11 @@ bool initializeAll(Doctor* doctors, Nurse* nurses, Admin admin) {
     // inFile;
        //  while ();
     return true;
+}
+
+int main() {
+    Patients P;
+    Doctor D;
+    Nurse N;
+    
 }
