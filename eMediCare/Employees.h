@@ -5,15 +5,20 @@ using namespace std;
 
 class Person {
 protected:
+    string id;
     string name;
     string contact;
     string gender;
 
     Person() {}
-    Person(string name, string contact, string gender) : name(name), contact(contact), gender(gender) {}
-
+    Person(string id, string name, string contact, string gender) : id(id),name(name), contact(contact), gender(gender) {}
+public:
     string getName() {
         return name;
+    }
+    
+    string getID() {
+        return id;
     }
 
     virtual void addToFile() = 0;
@@ -21,13 +26,12 @@ protected:
 
 class Employee : public Person {
 protected:
-    string id;
     string password;
     string designation;
 
     Employee() {}
     Employee(string id, string password, string designation, string name, string gender, string contact) :
-        Person(name, contact, gender), id(id), password(password), designation(designation) {}
+        Person(id, name, contact, gender), password(password), designation(designation) {}
 
 public:
     bool validate(string id, string pass) {
@@ -43,7 +47,6 @@ public:
 
 class Patients :public Person {
 private:
-    string id;
     string assignedNurseId;
     string assignedDoctorId;
     string age;
@@ -54,13 +57,9 @@ public:
     static int PateintsCount;
     Patients() { Medicine = new string[5]; PateintsCount++; medicineCount = 0; } //max 5 medicines at a time
     Patients(string name, string contact, string gender, string id, string age) :
-        Person(name, contact, gender), id(id), age(age), medicineCount(0) {
+        Person(id, name, contact, gender), age(age), medicineCount(0) {
         PateintsCount++;
         Medicine = new string[5];
-    }
-
-    string getID() {
-        return id;
     }
 
     void setNurseID(string id) {
@@ -77,15 +76,6 @@ public:
 
     string getDoctorID() {
         return assignedDoctorId;
-    }
-
-    string getName() {
-        return name;
-    }
-
-    void setMedicine(string medicine) {
-        Medicine[medicineCount] = medicine;
-        medicineCount++;
     }
 
     void addToFile() {
@@ -107,21 +97,20 @@ public:
 class Nurse : public Employee {
 private:
     int NoOfPatients;
-    string* PatientsId;
+    string PatientsId[5];//assigning max 5 patients to each nurse
 public:
     static int NursesCount;
-    Nurse() { PatientsId = new string[5]; NoOfPatients = 0; } //assigning max 5 patients to each nurse
+    Nurse() { NoOfPatients = 0; } 
     Nurse(string id, string password, string name, string gender, string contact) :
         Employee(id, password, "Nurse", name, gender, contact), NoOfPatients(0) {
-        PatientsId = new string[5];
     }
 
-    string getID() {
-        return id;
-    }
-
-    void setPatientId(string id) {
+    bool setPatientId(string id) {
+        if (NoOfPatients>=5) { //checking workload
+            return false;
+        }
         PatientsId[NoOfPatients++] = id;
+        return true;
     }
 
     void addToFile() {
@@ -134,13 +123,6 @@ public:
         outFile.write((char*)this, sizeof(Nurse));
         outFile.close();
     }
-    //checks the workload on the nurse
-    bool WorkLoad() {
-        if (NoOfPatients > 5)
-            return false;
-        else
-            return true;
-    }
 
     //Tells the name and id of assigned patients to a particular nurse
     void showAssignedPatients(Patients& patient) {
@@ -149,16 +131,7 @@ public:
            // cout << "ID: " << patient[i].getID() << ", Name: " << patient[i].getName() << endl;
         }
     }
-    //assign medicine to patient
-    void assignMedicine(string medName, Patients* patient) {
-        for (int i = 0; i < NoOfPatients; i++) {
-            if (patient[i].getName() == name) {
-                patient[i].setMedicine(medName);
-                break;
-            }
-        }
-    }
-
+    
     static void incrementCount() {
         NursesCount++;
     }
@@ -167,22 +140,21 @@ public:
 class Doctor : public Employee {
 private:
     int NoOfPatients;
-    string* patientsId;
+    string patientsId[5];//The doctor will deal max 5 patients at a time
    
 public:
     static int DoctorsCount;
-    Doctor() { patientsId = new string[5]; NoOfPatients = 0; }//The doctor will deal max 5 patients at a time
+    Doctor() { NoOfPatients = 0; }
     Doctor(string id, string password, string name, string gender, string contact) :
         Employee(id, password, "Doctor", ("Dr. " + name), gender, contact), NoOfPatients(0) {
-        patientsId = new string[5];
     }
 
-    void setPatientId(string id) {
+    bool setPatientId(string id) {
+        if (NoOfPatients >= 5){ //checking workload
+            return false;
+        }
         patientsId[NoOfPatients++] = id;
-    }
-
-    string getID() {
-        return id;
+        return true;
     }
 
     void addToFile() {
@@ -195,14 +167,15 @@ public:
         outFile.write((char*)this, sizeof(Doctor));
         outFile.close();
     }
+    
     //assigns nurse to a particular patient
-    void assignNurse(Nurse& nurse, Patients& patient, string id) {
-        nurse.setPatientId(patient.getID());
-        patient.setNurseID(nurse.getID());
-    }
-    //prescribes medicine to nurse
-    void prescribeMedicine(Nurse& nurse, string medName, Patients& patient) {
-        nurse.assignMedicine(medName, &patient);
+    bool assignNurse(Nurse& nurse, Patients& patient) {
+        if (nurse.setPatientId(patient.getID())) {
+            //message indication that nurses has been assigned to the patient
+            patient.setNurseID(nurse.getID());
+            return true;
+        }
+        return false;
     }
 
     static void incrementCount() {
@@ -221,22 +194,29 @@ public:
 
     void addToFile() {
         ofstream outFile;
-        string data;
-
-        data = id + " " + password + " " + name + " " + gender + " " + contact;
-
-        outFile.open("Admin.txt");
+        outFile.open("Admin.dat", ios::app);
         if (!outFile) {
             //error message(depends if we are using forms or not) 
             return;
         }
-        outFile << data << endl;
+        outFile.write((char*)this, sizeof(Admin));
         outFile.close();
     }
     //assigns doctor to a particular patient
-    void assignDoctor(Doctor& doctor, Patients& patient, string id) {
+    //ig this function is not needed
+    /*void assignDoctor(Doctor& doctor, Patients& patient) {
         doctor.setPatientId(patient.getID());
         patient.setDoctorID(doctor.getID());
+    }*/
+
+    bool addPatient(Patients patients[], Doctor& doctor, string name, string gender, string contact, string age, string id) {
+        if (doctor.setPatientId(id)) {
+            patients[Patients::PateintsCount] = Patients(name, contact, gender, id, age);
+            patients[Patients::PateintsCount].addToFile();
+            Patients::incrementCount();
+            return true;
+        }
+        return false;
     }
 
     static void incrementCount() {
@@ -244,10 +224,12 @@ public:
     }
 
 };
+
 int Doctor::DoctorsCount = 0;
 int Nurse::NursesCount = 0;
 int Admin::AdminsCount = 0;
 int Patients::PateintsCount = 0;
+
 //function called at the start of the program, loads all the data stored in files to arrays
 bool initializeAll(Doctor* doctors, Nurse* nurses, Admin* admins, Patients* patients) {
     //can update later in someway to dynamically allocate memory to required size of arrays
@@ -282,9 +264,6 @@ bool initializeAll(Doctor* doctors, Nurse* nurses, Admin* admins, Patients* pati
 
     }
     return true;
-}
-int main() {
-
 }
 
 
