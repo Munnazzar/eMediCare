@@ -52,7 +52,7 @@ private:
 
 public:
     static int PateintsCount;
-    Patients() { Medicine = new string[5]; PateintsCount++; } //max 5 medicines at a time
+    Patients() { Medicine = new string[5]; PateintsCount++; medicineCount = 0; } //max 5 medicines at a time
     Patients(string name, string contact, string gender, string id, string age) :
         Person(name, contact, gender), id(id), age(age), medicineCount(0) {
         PateintsCount++;
@@ -110,7 +110,7 @@ private:
     string* PatientsId;
 public:
     static int NursesCount;
-    Nurse() { PatientsId = new string[5]; } //assigning max 5 patients to each nurse
+    Nurse() { PatientsId = new string[5]; NoOfPatients = 0; } //assigning max 5 patients to each nurse
     Nurse(string id, string password, string name, string gender, string contact) :
         Employee(id, password, "Nurse", name, gender, contact), NoOfPatients(0) {
         PatientsId = new string[5];
@@ -171,9 +171,9 @@ private:
    
 public:
     static int DoctorsCount;
-    Doctor() { patientsId = new string[5]; }//The doctor will deal max 5 patients at a time
+    Doctor() { patientsId = new string[5]; NoOfPatients = 0; }//The doctor will deal max 5 patients at a time
     Doctor(string id, string password, string name, string gender, string contact) :
-        Employee(id, password, "Doctor", ("Dr. " + name), gender, contact) {
+        Employee(id, password, "Doctor", ("Dr. " + name), gender, contact), NoOfPatients(0) {
         patientsId = new string[5];
     }
 
