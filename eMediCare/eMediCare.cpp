@@ -5,9 +5,12 @@
 #include "ReminderFunction.h"
 using namespace std;
 
-//int main()
-//{
-//	reminder("Sunday", 13, 48);
-//	return 0;
-//}
+int main()
+{
+	//we would need to create empty files first so that initialize funtion
+	//can read those empty files
+
+	//reminder("Sunday", 13, 48);
+	//return 0;
+}
 
