@@ -12,5 +12,14 @@ int main()
 
 	//reminder("Sunday", 13, 48);
 	//return 0;
+
+	//Admin admins[10];
+	//Doctor doctors[10];
+	//Nurse nurses[10];
+	//Patients patients[10];
+
+	//Admin admin("123", "pass", "admin", "other", "036581");
+	//initializeAll(doctors, nurses, admins, patients);
 }
+
 

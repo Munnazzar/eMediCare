@@ -1,7 +1,6 @@
 #pragma once
 #include "Employees.h"
 
-
 class MedicineAndDosage {
 private:
 	const unsigned int MedicineID;
@@ -9,7 +8,6 @@ private:
 
 	int dosageTimings[7][3]; // row number would be the weekday, and each weekday usually has max 3 dosages
 						// my approach with this is that each column of the weekday would store the sum of hours and minutes in the 24 hours format
-
 	bool flag[7][3];
 
 public:
@@ -56,5 +54,4 @@ public:
 			return; // here i want a cout statement that says, max dosages in a day for this medicine reached already
 		}
 	}
-
 };
