@@ -62,7 +62,8 @@ public:
 		}
 	}
 
-	void addDosage(string weekday, int hours, int minute)
+	//return type conflicts
+	bool addDosage(string weekday, int hours, int minute)
 	{
 		std::string weekdays[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday" };
 
@@ -87,6 +88,8 @@ public:
 				break;
 			}
 		}
+
+		/*cant we set bool as the return type and return checkForMaxDosages instead of this if statement*/
 		if (!checkForMaxDosages)
 		{
 			return; // here i want a cout statement that says, max dosages in a day for this medicine reached already

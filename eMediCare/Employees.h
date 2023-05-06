@@ -50,14 +50,13 @@ private:
     string assignedNurseId;
     string assignedDoctorId;
     int medicineCount;
-    MedicineAndDosage *medicine;
+    MedicineAndDosage medicine[5]; //max 5 medicines at a time
 
 public:
     static int PateintsCount;
-    Patient() { medicine = new MedicineAndDosage[5]; medicineCount = 0; age = 0; } //max 5 medicines at a time
+    Patient() { medicineCount = 0; age = 0; } 
     Patient(string id, string name, string gender, string contact, int age, string doctorId ) :
         Person(id, name, contact, gender), age(age), medicineCount(0), assignedDoctorId(doctorId) {
-        medicine = new MedicineAndDosage[5];
     }
 
     void setNurseID(string id) {
@@ -74,6 +73,17 @@ public:
 
     string getDoctorID() {
         return assignedDoctorId;
+    }
+
+    bool addMedicine(unsigned int id, string medicineName) {
+        if (medicineCount >= 5)
+            return false;
+        medicine[medicineCount++] = MedicineAndDosage(id, medicineName);
+        return true;
+    }
+
+    bool addDosage(string weekDay, int hours, int minutes, int medicineNumber) {
+        return medicine[medicineNumber].addDosage(weekDay, hours, minutes);
     }
 
     void addToFile() {
@@ -176,6 +186,14 @@ public:
         }
         patientsId[NoOfPatients++] = id;
         return true;
+    }
+
+    bool addMedicine(Patient &patient, int medicineId,string medicineName) {
+        return patient.addMedicine(medicineId, medicineName);
+    }
+
+    bool addDosage(Patient& patient, string weekday, int hours, int minutes, int medicineNumber) {
+        return patient.addDosage(weekday,hours,minutes, medicineNumber);
     }
 
     void addToFile() {
