@@ -1,11 +1,12 @@
 #pragma once
-#include "Employees.h"
+#include <string>
+
 
 
 class MedicineAndDosage {
 private:
-	const unsigned int MedicineID;
-	const string MedicineName;
+	unsigned int MedicineID;
+	string MedicineName;
 
 	int dosageTimings[7][3]; // row number would be the weekday, and each weekday usually has max 3 dosages
 						// my approach with this is that each column of the weekday would store the sum of hours and minutes in the 24 hours format
@@ -13,7 +14,10 @@ private:
 	bool flag[7][3];
 
 public:
-	MedicineAndDosage(const unsigned int id, const string name) : MedicineID(id), MedicineName(name) {
+
+	MedicineAndDosage() {}
+
+	MedicineAndDosage(unsigned int id, string MedicineName) : MedicineID(id), MedicineName(MedicineName) {
 
 		for (int i = 0; i < 7; i++)
 		{
@@ -28,7 +32,7 @@ public:
 
 	void addDosage(string weekday, int hours, int minute)
 	{
-		string weekdays[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday" };
+		std::string weekdays[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday" };
 
 		int indexWeekDay;
 		for (int i = 0; i < 7; i++) //checking for the given weekday in string and comparing it to the index of "weekdays" array 
@@ -46,7 +50,7 @@ public:
 		{
 			if (dosageTimings[indexWeekDay][i] == -1)		//here it checks for all available slots for the current medicine in the dosages array
 			{
-				dosageTimings[indexWeekDay][i] == hours * 60 + minute;  //converts time into minutes and stores it in the respective array
+				dosageTimings[indexWeekDay][i] = hours * 60 + minute;  //converts time into minutes and stores it in the respective array
 				checkForMaxDosages = true;
 				break;
 			}
@@ -56,5 +60,7 @@ public:
 			return; // here i want a cout statement that says, max dosages in a day for this medicine reached already
 		}
 	}
+
+	
 
 };

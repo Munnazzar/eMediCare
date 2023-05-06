@@ -1,7 +1,12 @@
 #pragma once
 #include <string>
+#include <iostream>
 #include <fstream>
+//#include "MedicineAndDosage.h"
 using namespace std;
+
+
+
 
 class Person {
 protected:
@@ -11,12 +16,12 @@ protected:
     string gender;
 
     Person() {}
-    Person(string id, string name, string contact, string gender) : id(id),name(name), contact(contact), gender(gender) {}
+    Person(string id, string name, string contact, string gender) : id(id), name(name), contact(contact), gender(gender) {}
 public:
     string getName() {
         return name;
     }
-    
+
     string getID() {
         return id;
     }
@@ -40,26 +45,23 @@ public:
     void changePassword(string pass) {
         password = pass;
     }
-    void addToFile() {
-
-    }
 };
 
 class Patients :public Person {
 private:
+    string age;
     string assignedNurseId;
     string assignedDoctorId;
-    string age;
     int medicineCount;
-    string* Medicine;
+    MedicineAndDosage *medicine;
 
 public:
     static int PateintsCount;
-    Patients() { Medicine = new string[5]; PateintsCount++; medicineCount = 0; } //max 5 medicines at a time
+    Patients() { medicine = new MedicineAndDosage[5]; PateintsCount++; medicineCount = 0; } //max 5 medicines at a time
     Patients(string name, string contact, string gender, string id, string age) :
         Person(id, name, contact, gender), age(age), medicineCount(0) {
         PateintsCount++;
-        Medicine = new string[5];
+        medicine = new MedicineAndDosage[5];
     }
 
     void setNurseID(string id) {
@@ -80,13 +82,18 @@ public:
 
     void addToFile() {
         ofstream outFile;
-        outFile.open("Patients.dat", ios::app);
+        outFile.open("Patients.txt", ios::app);
         if (!outFile) {
             //error message(depends if we are using forms or not) 
             return;
         }
-        outFile.write((char*)this, sizeof(Patients));
+        outFile << id << " " << name << " " << contact << " " << gender << " " << age << " " << assignedNurseId << " " << assignedDoctorId << " " << medicineCount;
+        outFile << endl;
         outFile.close();
+    }
+
+    void readFile(ifstream& inFile) {
+        inFile >> id >> name >> contact >> gender >> age >> assignedNurseId >> assignedDoctorId >> medicineCount;
     }
 
     static void incrementCount() {
@@ -100,13 +107,17 @@ private:
     string PatientsId[5];//assigning max 5 patients to each nurse
 public:
     static int NursesCount;
-    Nurse() { NoOfPatients = 0; } 
+    Nurse() { NoOfPatients = 0; }
     Nurse(string id, string password, string name, string gender, string contact) :
         Employee(id, password, "Nurse", name, gender, contact), NoOfPatients(0) {
     }
 
+    void display() {
+        std::cout << "id" << id << " name: " << name << "contact: " << contact << " gender: " << gender << " password: " << password << " num:" << NoOfPatients << endl;
+    }
+
     bool setPatientId(string id) {
-        if (NoOfPatients>=5) { //checking workload
+        if (NoOfPatients >= 5) { //checking workload
             return false;
         }
         PatientsId[NoOfPatients++] = id;
@@ -115,42 +126,57 @@ public:
 
     void addToFile() {
         ofstream outFile;
-        outFile.open("Nurse.dat", ios::app);
+        outFile.open("Nurse.txt", ios::app);
         if (!outFile) {
             //error message(depends if we are using forms or not) 
             return;
         }
-        outFile.write((char*)this, sizeof(Nurse));
+        outFile << id << " " << name << " " << contact << " " << gender << " " << password << " " << NoOfPatients;
+        for (int i = 0; i < NoOfPatients; i++) {
+            outFile << " " << PatientsId[i];
+        }
+        outFile << endl;
         outFile.close();
+    }
+
+    void readFile(ifstream& inFile) {
+        inFile >> id >> name >> contact >> gender >> password >> NoOfPatients;
+        for (int i = 0; i < NoOfPatients; i++) {
+            inFile >> PatientsId[i];
+        }
     }
 
     //Tells the name and id of assigned patients to a particular nurse
     void showAssignedPatients(Patients& patient) {
         //cout << "Assigned Patients:" << endl;
         for (int i = 0; i < NoOfPatients; i++) {
-           // cout << "ID: " << patient[i].getID() << ", Name: " << patient[i].getName() << endl;
+            // cout << "ID: " << patient[i].getID() << ", Name: " << patient[i].getName() << endl;
         }
     }
-    
+
     static void incrementCount() {
         NursesCount++;
     }
+    
 };
 
 class Doctor : public Employee {
 private:
     int NoOfPatients;
     string patientsId[5];//The doctor will deal max 5 patients at a time
-   
+
 public:
     static int DoctorsCount;
     Doctor() { NoOfPatients = 0; }
     Doctor(string id, string password, string name, string gender, string contact) :
-        Employee(id, password, "Doctor", ("Dr. " + name), gender, contact), NoOfPatients(0) {
+        Employee(id, password, "Doctor", ("Dr" + name), gender, contact), NoOfPatients(0) {
     }
 
+    void display() {
+        std::cout << "id" << id << " name: " << name << "contact: " << contact << " gender: " << gender << " password: " << password << " num:" << NoOfPatients << endl;
+    }
     bool setPatientId(string id) {
-        if (NoOfPatients >= 5){ //checking workload
+        if (NoOfPatients >= 5) { //checking workload
             return false;
         }
         patientsId[NoOfPatients++] = id;
@@ -159,15 +185,26 @@ public:
 
     void addToFile() {
         ofstream outFile;
-        outFile.open("Doctor.dat", ios::app);
+        outFile.open("Doctor.txt", ios::app);
         if (!outFile) {
             //error message(depends if we are using forms or not) 
             return;
         }
-        outFile.write((char*)this, sizeof(Doctor));
+        outFile << id << " " << name << " " << contact << " " << gender << " " << password << " " << NoOfPatients;
+        for (int i = 0; i < NoOfPatients; i++) {
+            outFile << " " << patientsId[i];
+        }
+        outFile << endl;
         outFile.close();
     }
-    
+    bool readFile(ifstream& inFile) {
+        inFile >> id >> name >> contact >> gender >> password >> NoOfPatients;
+        for (int i = 0; i < NoOfPatients; i++) {
+            inFile >> patientsId[i];
+        }
+        return true;
+    }
+
     //assigns nurse to a particular patient
     bool assignNurse(Nurse& nurse, Patients& patient) {
         if (nurse.setPatientId(patient.getID())) {
@@ -185,7 +222,7 @@ public:
 
 class Admin : public Employee {
 private:
-    
+
 public:
     static int AdminsCount;
     Admin() {}
@@ -194,14 +231,19 @@ public:
 
     void addToFile() {
         ofstream outFile;
-        outFile.open("Admin.dat", ios::app);
+        outFile.open("Admin.txt", ios::app);
         if (!outFile) {
             //error message(depends if we are using forms or not) 
             return;
         }
-        outFile.write((char*)this, sizeof(Admin));
+        outFile << endl << id << " " << name << " " << contact << " " << gender << " " << password;
         outFile.close();
     }
+
+    void readFile(ifstream& inFile) {
+        inFile >> id >> name >> contact >> gender >> password;
+    }
+
     //assigns doctor to a particular patient
     //ig this function is not needed
     /*void assignDoctor(Doctor& doctor, Patients& patient) {
@@ -219,52 +261,69 @@ public:
         return false;
     }
 
+    bool addDoctor(Doctor* doctors, string id, string name, string password, string gender, string contact) {
+        if (Doctor::DoctorsCount >= 10) {
+            //error message
+            return false;
+        }
+
+        doctors[Doctor::DoctorsCount] = Doctor(id, password, name, gender, contact);
+        doctors[Doctor::DoctorsCount].addToFile();
+        Doctor::incrementCount();
+        return true;
+    }
+
+    bool addNurse(Nurse nurses[], string name, string gender, string contact, string age, string id) {
+        if (Nurse::NursesCount >= 10) {
+            //error message
+            return false;
+        }
+        nurses[Nurse::NursesCount] = Nurse(name, contact, gender, id, age);
+        nurses[Nurse::NursesCount].addToFile();
+        Nurse::incrementCount();
+        return true;
+    }
+
     static void incrementCount() {
         AdminsCount++;
     }
 
 };
 
-int Doctor::DoctorsCount = 0;
-int Nurse::NursesCount = 0;
-int Admin::AdminsCount = 0;
-int Patients::PateintsCount = 0;
+int Doctor::DoctorsCount = -1;
+int Nurse::NursesCount = -1;
+int Admin::AdminsCount = -1;
+int Patients::PateintsCount = -1;
 
 //function called at the start of the program, loads all the data stored in files to arrays
-bool initializeAll(Doctor* doctors, Nurse* nurses, Admin* admins, Patients* patients) {
-    //can update later in someway to dynamically allocate memory to required size of arrays
-    doctors = new Doctor[10];
-    nurses = new Nurse[10];
-    admins = new Admin[10];
-
-    //Doctor::DoctorsCount = 0;
-    //Nurse::NursesCount = 0;
-    //Admin::AdminsCount = 0;
-    //Patients::PateintsCount = 0;
-
+bool initializeAll(Doctor doctors[], Nurse nurses[], Admin admins[], Patients patients[]) {
     ifstream inFile;
-    inFile.open("Doctor.dat", ios::in);
-    while (inFile.read((char*)(&doctors[Doctor::DoctorsCount]), sizeof(Doctor))) {
-        Doctor::incrementCount;
+    inFile.open("Doctor.txt", ios::in);
+    while (!inFile.eof()) {
+        Doctor::incrementCount();
+        doctors[Doctor::DoctorsCount].readFile(inFile);
     }
+    inFile.close();
 
-    inFile.open("Nurse.dat", ios::in);
-    while (inFile.read((char*)(&nurses[Nurse::NursesCount]), sizeof(Nurse))) {
-        Nurse::incrementCount;
+    inFile.open("Nurse.txt", ios::in);
+    while (!inFile.eof()) {
+        Nurse::incrementCount();
+        nurses[Nurse::NursesCount].readFile(inFile);
     }
+    inFile.close();
 
-    inFile.open("Admin.dat", ios::in);
-    while (inFile.read((char*)(&admins[Admin::AdminsCount]), sizeof(Admin))) {
-        Admin::incrementCount;
+    inFile.open("Admin.txt", ios::in);
+    while (!inFile.eof()) {
+        Admin::incrementCount();
+        admins[Admin::AdminsCount].readFile(inFile);
     }
+    inFile.close();
 
-    inFile.open("Patients.dat", ios::in);
-    while (inFile.read((char*)(&patients[Patients::PateintsCount]), sizeof(Patients))) {
-        Patients::incrementCount;
-
+    inFile.open("Patients.txt", ios::in);
+    while (!inFile.eof()) {
+        Patients::incrementCount();
+        patients[Patients::PateintsCount].readFile(inFile);
     }
+    inFile.close();
     return true;
 }
-
-
-
