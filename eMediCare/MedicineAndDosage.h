@@ -23,8 +23,7 @@ public:
 		{
 			for (int j = 0; j < 3; j++)
 			{
-				cout << dosageTimings[i][j] << " " << flag[i][j] << "\t";		//assigning -1 as initial value, so we can compare with -1 if at that day and time a dosage is to be given
-				//assigning false as initial flags
+				cout << dosageTimings[i][j] << " " << flag[i][j] << "\t";	
 			}
 			cout << endl;
 		}
