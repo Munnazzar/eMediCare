@@ -26,8 +26,5 @@
     <ClInclude Include="ReminderFunction.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MedicineAndDosage.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

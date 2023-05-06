@@ -131,7 +131,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Employees.h" />
-    <ClInclude Include="MedicineAndDosage.h" />
     <ClInclude Include="ReminderFunction.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
