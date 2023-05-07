@@ -90,14 +90,14 @@ public:
 
     void addToFile() {
         ofstream outFile;
-        outFile.open("Patients.txt", ios::app);
+        outFile.open("Patients.txt", ios::out);
         if (!outFile) {
             //error message(depends if we are using forms or not) 
             return;
         }
         outFile << id << " " << name << " " << contact << " " << gender << " " << age << " " << assignedNurseId << " " << assignedDoctorId << " " << medicineCount;
         for (int i = 0; i < medicineCount; i++) {
-            medicine[i].addToFile(outFile);
+            outFile << medicine[i];
         }
         outFile << endl;
         outFile.close();
@@ -106,7 +106,7 @@ public:
     void readFile(ifstream& inFile) {
         inFile >> id >> name >> contact >> gender >> age >> assignedNurseId >> assignedDoctorId >> medicineCount;
         for (int i = 0; i < medicineCount;i++) {
-            medicine[i].readFile(inFile);
+            inFile >> medicine[i];
         }
     }
 

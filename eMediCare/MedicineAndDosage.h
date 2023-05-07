@@ -43,14 +43,19 @@ public:
 		}
 	}
 
-	void addToFile(ofstream& outfile) {
-		outfile << " ";
-		outfile.write((char*)this, sizeof(MedicineAndDosage));
-	}
-	void readFile(ifstream& infile) {
-		infile.get();
-		infile.read((char*)this, sizeof(MedicineAndDosage));
-	}
+	friend void operator << (ofstream& outfile, MedicineAndDosage& obj);
+	friend void operator >> (ifstream& infile, MedicineAndDosage& obj);
+
+	// void addToFile(ofstream& outfile) {
+	// 	outfile<<" ";
+	// 	outfile.write((char*)this, sizeof(MedicineAndDosage));
+	// }
+
+
+	// void readFile(ifstream& infile) {
+	// 	infile.get();
+	// 	infile.read((char*)this, sizeof(MedicineAndDosage));
+	// }
 
 	//return type conflicts
 	bool addDosage(string weekday, int hours, int minute)
@@ -101,3 +106,14 @@ public:
 	//	}
 	//}
 };
+
+void operator << (ofstream& outfile, MedicineAndDosage& obj) {
+	outfile << " ";
+	outfile.write((char*)&obj, sizeof(MedicineAndDosage));
+}
+
+
+void operator >> (ifstream& infile, MedicineAndDosage& obj) {
+	infile.get();
+	infile.read((char*)&obj, sizeof(MedicineAndDosage));
+}
