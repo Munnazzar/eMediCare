@@ -54,8 +54,8 @@ private:
 
 public:
     static int PateintsCount;
-    Patient() { medicineCount = 0; age = 0; } 
-    Patient(string id, string name, string gender, string contact, int age, string doctorId ) :
+    Patient() { medicineCount = 0; age = 0; }
+    Patient(string id, string name, string gender, string contact, int age, string doctorId) :
         Person(id, name, contact, gender), age(age), medicineCount(0), assignedDoctorId(doctorId) {
     }
 
@@ -83,7 +83,9 @@ public:
     }
 
     bool addDosage(string weekDay, int hours, int minutes, int medicineNumber) {
-        return medicine[medicineNumber].addDosage(weekDay, hours, minutes);
+        if (medicineNumber > medicineCount)
+            return false;
+        return medicine[medicineNumber - 1].addDosage(weekDay, hours, minutes);
     }
 
     void addToFile() {
@@ -94,17 +96,38 @@ public:
             return;
         }
         outFile << id << " " << name << " " << contact << " " << gender << " " << age << " " << assignedNurseId << " " << assignedDoctorId << " " << medicineCount;
+        for (int i = 0; i < medicineCount; i++) {
+            medicine[i].addToFile(outFile);
+        }
         outFile << endl;
         outFile.close();
     }
 
     void readFile(ifstream& inFile) {
         inFile >> id >> name >> contact >> gender >> age >> assignedNurseId >> assignedDoctorId >> medicineCount;
+        for (int i = 0; i < medicineCount;i++) {
+            medicine[i].readFile(inFile);
+        }
     }
 
     static void incrementCount() {
         PateintsCount++;
     }
+
+    //for testing purposes
+    /*void display() {
+        cout << "id" << id << endl;
+        cout << "name" << name << endl;
+        cout << "contact" << contact << endl;
+        cout << "gender" << gender << endl;
+        cout << "age" << age << endl;
+        cout << "assignedNurseId" << assignedNurseId << endl;
+        cout << "assignedDoctorId" << assignedDoctorId << endl;
+        cout << "medicineCount" << medicineCount << endl;
+        for (int i = 0; i < medicineCount; i++) {
+            medicine[i].display();
+        }
+    }*/
 };
 
 class Nurse : public Employee {
