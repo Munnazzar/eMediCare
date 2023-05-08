@@ -92,8 +92,7 @@ public:
 		/*cant we set bool as the return type and return checkForMaxDosages instead of this if statement*/
 		if (!checkForMaxDosages)
 		{
-			cout << "here i want a cout statement that says, max dosages in a day for this medicine reached already" << endl;
-			return 0; 
+			return; // here i want a cout statement that says, max dosages in a day for this medicine reached already
 		}
 	}
 };

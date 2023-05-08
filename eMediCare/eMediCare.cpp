@@ -2,7 +2,6 @@
 #include "MedicineAndDosage.h"
 #include <fstream>
 #include <iostream>
-#include <windows.h>
 
 int main() {
 		/*fstream file;
@@ -17,13 +16,13 @@ int main() {
 
 	//MedicineAndDosage medicine;
 
-	/*Admin admins[10];
+	Admin admins[10];
 	Doctor doctors[10];
 	Nurse nurses[10];
 	Patient patients[10];
 
 	Admin admin("123", "pass", "admin", "other", "036581");
-	initializeAll(doctors, nurses, admins, patients);*/
+	initializeAll(doctors, nurses, admins, patients);
 
 		//admin.addDoctor(doctors, "iid4", "mr.doc4", "pass4", "male4", "764");
 		//admin.addNurse(nurses,"nurse2","gender3","0384","861","dsa2");
@@ -39,9 +38,6 @@ int main() {
 
 	//Admin admin("123", "pass", "admin", "other", "036581");
 	//initializeAll(doctors, nurses, admins, patients);
-	intro();
-	system("cls");
-	cout << "======================================================== eMediCare =====================================================" << endl;
 }
 
 
