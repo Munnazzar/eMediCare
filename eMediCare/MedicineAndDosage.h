@@ -6,7 +6,7 @@
 #include <string.h>
 using namespace std;
 
-class MedicineAndDosage{
+class MedicineAndDosage {
 private:
 	unsigned int MedicineID;
 	char MedicineName[20];
@@ -16,25 +16,6 @@ private:
 	bool flag[7][3];
 
 public:
-	void display() {
-		cout << "id: " << MedicineID;
-		cout << ", Name: " << MedicineName << endl;
-		for (int i = 0; i < 7; i++)
-		{
-			for (int j = 0; j < 3; j++)
-			{
-				cout << dosageTimings[i][j] << " " << flag[i][j] << "\t";	
-			}
-			cout << endl;
-		}
-	}
-
-	void addToFile(ofstream& outfile) {
-		outfile.write((char*)this, sizeof(MedicineAndDosage));
-	}
-	void readFile(ifstream& infile) {
-		infile.read((char*)this, sizeof(MedicineAndDosage));
-	}
 	MedicineAndDosage() {
 		MedicineID = -1;
 		strcpy_s(MedicineName, "default");
@@ -61,6 +42,20 @@ public:
 
 		}
 	}
+
+	friend void operator << (ofstream& outfile, MedicineAndDosage& obj);
+	friend void operator >> (ifstream& infile, MedicineAndDosage& obj);
+
+	// void addToFile(ofstream& outfile) {
+	// 	outfile<<" ";
+	// 	outfile.write((char*)this, sizeof(MedicineAndDosage));
+	// }
+
+
+	// void readFile(ifstream& infile) {
+	// 	infile.get();
+	// 	infile.read((char*)this, sizeof(MedicineAndDosage));
+	// }
 
 	//return type conflicts
 	bool addDosage(string weekday, int hours, int minute)
@@ -90,9 +85,35 @@ public:
 		}
 
 		/*cant we set bool as the return type and return checkForMaxDosages instead of this if statement*/
-		if (!checkForMaxDosages)
-		{
-			return; // here i want a cout statement that says, max dosages in a day for this medicine reached already
-		}
+//		if (!checkForMaxDosages)
+//		{
+//			return; // here i want a cout statement that says, max dosages in a day for this medicine reached already
+//		}
+		return checkForMaxDosages;
 	}
+
+	//for testing
+	//void display() {
+	//	cout << "id: " << MedicineID;
+	//	cout << ", Name: " << MedicineName << endl;
+	//	for (int i = 0; i < 7; i++)
+	//	{
+	//		for (int j = 0; j < 3; j++)
+	//		{
+	//			cout << dosageTimings[i][j] << " " << flag[i][j] << "\t";
+	//		}
+	//		cout << endl;
+	//	}
+	//}
 };
+
+void operator << (ofstream& outfile, MedicineAndDosage& obj) {
+	outfile << " ";
+	outfile.write((char*)&obj, sizeof(MedicineAndDosage));
+}
+
+
+void operator >> (ifstream& infile, MedicineAndDosage& obj) {
+	infile.get();
+	infile.read((char*)&obj, sizeof(MedicineAndDosage));
+}

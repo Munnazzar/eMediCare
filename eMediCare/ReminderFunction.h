@@ -5,9 +5,6 @@
 #include <ctime>
 using namespace std;
 
-
-
-
 bool reminder(string input_weekday, int input_hour, int input_minute)      //a function that returns a boolean, in case the current time and weekday matches with the given time and weekday
 {
     // Get current time and weekday
