@@ -3,6 +3,8 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include <windows.h>
+#include <stdlib.h>
 using namespace std;
 
 class Person {
@@ -26,24 +28,6 @@ public:
     virtual void addToFile() = 0;
 };
 
-class Employee : public Person {
-protected:
-    string password;
-    string designation;
-
-    Employee() {}
-    Employee(string id, string password, string designation, string name, string gender, string contact) :
-        Person(id, name, contact, gender), password(password), designation(designation) {}
-
-public:
-    bool validate(string id, string pass) {
-        return (this->id == id && password == pass);
-    }
-    void changePassword(string pass) {
-        password = pass;
-    }
-};
-
 class Patient :public Person {
 private:
     int age;
@@ -53,7 +37,7 @@ private:
     MedicineAndDosage medicine[5]; //max 5 medicines at a time
 
 public:
-    static int PateintsCount;
+    static int PatientsCount;
     Patient() { medicineCount = 0; age = 0; } 
     Patient(string id, string name, string gender, string contact, int age, string doctorId ) :
         Person(id, name, contact, gender), age(age), medicineCount(0), assignedDoctorId(doctorId) {
@@ -65,6 +49,10 @@ public:
 
     void setDoctorID(string id) {
         assignedDoctorId = id;
+    }
+
+    int getMedicineCount() {
+        return medicineCount;
     }
 
     string getNurseID() {
@@ -103,7 +91,39 @@ public:
     }
 
     static void incrementCount() {
-        PateintsCount++;
+        PatientsCount++;
+    }
+
+    void MedicineDetails() {
+        for (int i = 0; i < getMedicineCount(); i++) {
+            medicine[i].display();
+        }
+    }
+};
+
+class Employee : public Person {
+protected:
+    string password;
+    string designation;
+
+    Employee() {}
+    Employee(string id, string password, string designation, string name, string gender, string contact) :
+        Person(id, name, contact, gender), password(password), designation(designation) {}
+
+public:
+    bool validate(string id, string pass) {
+        return (this->id == id && password == pass);
+    }
+    void changePassword(string pass) {
+        password = pass;
+    }
+
+    void PatientMedicineDetails(Patient patients[], string id) {
+        for (int i = 0; i < Patient::PatientsCount; i++) {
+            if (id == patients[i].getID()) {
+                patients[i].MedicineDetails();
+            }
+        }
     }
 };
 
@@ -119,7 +139,7 @@ public:
     }
 
     void display() {
-        std::cout << "id" << id << " name: " << name << "contact: " << contact << " gender: " << gender << " password: " << password << " num:" << NoOfPatients << endl;
+        std::cout << "id: " << id << " name: " << name << "contact: " << contact << " gender: " << gender << " password: " << password << " num:" << NoOfPatients << endl;
     }
 
     bool setPatientId(string id) {
@@ -153,10 +173,15 @@ public:
     }
 
     //Tells the name and id of assigned patients to a particular nurse
-    void showAssignedPatients(Patient& patient) {
-        //cout << "Assigned Patients:" << endl;
+    void showAssignedPatients(Patient patients[]) {
+        cout << "Assigned Patients:" << endl;
         for (int i = 0; i < NoOfPatients; i++) {
-            // cout << "ID: " << patient[i].getID() << ", Name: " << patient[i].getName() << endl;
+            for (int j = 0; j < Patient::PatientsCount; j++) {
+                if (PatientsId[i] == patients[j].getID()) {
+                    cout << "PATIENT NO " << i + 1 << ":" << endl << "\tName: " << patients[j].getID() << endl << "\tId: " << patients[j].getName() << endl;
+                }
+            }
+            
         }
     }
 
@@ -178,7 +203,7 @@ public:
     }
 
     void display() {
-        std::cout << "id" << id << " name: " << name << "contact: " << contact << " gender: " << gender << " password: " << password << " num:" << NoOfPatients << endl;
+        std::cout << "id: " << id << " name: " << name << "contact: " << contact << " gender: " << gender << " password: " << password << " num:" << NoOfPatients << endl;
     }
     bool setPatientId(string id) {
         if (NoOfPatients >= 5) { //checking workload
@@ -221,8 +246,8 @@ public:
     //assigns nurse to a particular patient
     bool assignNurse(Nurse& nurse, Patient& patient) {
         if (nurse.setPatientId(patient.getID())) {
-            //message indication that nurses has been assigned to the patient
             patient.setNurseID(nurse.getID());
+            cout << "The Nurse has been assigned to the patient ' " << patient.getName() << " ' successfully..." << endl;
             return true;
         }
         return false;
@@ -267,8 +292,8 @@ public:
 
     bool addPatient(Patient patients[], Doctor& doctor, string id, string name, string gender, string contact, int age) {
         if (doctor.setPatientId(id)) {
-            patients[Patient::PateintsCount] = Patient(id, name, gender, contact, age, doctor.getID());
-            patients[Patient::PateintsCount].addToFile();
+            patients[Patient::PatientsCount] = Patient(id, name, gender, contact, age, doctor.getID());
+            patients[Patient::PatientsCount].addToFile();
             Patient::incrementCount();
             return true;
         }
@@ -307,7 +332,7 @@ public:
 int Doctor::DoctorsCount = -1;
 int Nurse::NursesCount = -1;
 int Admin::AdminsCount = -1;
-int Patient::PateintsCount = -1;
+int Patient::PatientsCount = -1;
 
 //function called at the start of the program, loads all the data stored in files to arrays
 bool initializeAll(Doctor doctors[], Nurse nurses[], Admin admins[], Patient patients[]) {
@@ -336,8 +361,32 @@ bool initializeAll(Doctor doctors[], Nurse nurses[], Admin admins[], Patient pat
     inFile.open("Patients.txt", ios::in);
     while (!inFile.eof()) {
         Patient::incrementCount();
-        patients[Patient::PateintsCount].readFile(inFile);
+        patients[Patient::PatientsCount].readFile(inFile);
     }
     inFile.close();
     return true;
+}
+
+void gotoline(int x, int y) {
+    COORD pos = { static_cast<SHORT>(x), static_cast<SHORT>(y)};
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
+void intro() {
+    gotoline(40, 5);
+    cout << "OBJECT ORIENTED PROGRAMMING PROJECT" ;
+    gotoline(52, 7);
+    cout << "eMediCare" ;
+    gotoline(40, 9);
+    //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+    cout << "Group members: ";
+    gotoline(40, 10);
+    cout << "- Asfandyar Khanzada 22K-4626";
+    gotoline(40, 11);
+    cout << "- Syed Abdullah Bin Tariq 22K-4253";
+    gotoline(40, 12);
+    cout << "- Munnazzar Shahzad 22K-4231";
+    //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+    cout << "\npress any key to continue......";
+    getchar();
 }
