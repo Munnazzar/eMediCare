@@ -131,7 +131,7 @@
     <ClCompile Include="eMediCare.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Employees.h" />
+    <ClInclude Include="EmployeesAndPatients.h" />
     <ClInclude Include="MedicineAndDosage.h" />
     <ClInclude Include="ReminderFunction.h" />
   </ItemGroup>

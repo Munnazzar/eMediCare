@@ -6,6 +6,11 @@
 #include <windows.h>
 using namespace std;
 
+void gotoline(int x, int y) {
+    COORD pos = { static_cast<SHORT>(x), static_cast<SHORT>(y) };
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+}
+
 class Person {
 protected:
     string id;
@@ -387,28 +392,4 @@ bool initializeAll(Doctor doctors[], Nurse nurses[], Admin admins[], Patient pat
     }
     inFile.close();
     return true;
-}
-
-void gotoline(int x, int y) {
-    COORD pos = { static_cast<SHORT>(x), static_cast<SHORT>(y) };
-    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
-}
-
-void intro() {
-    gotoline(40, 5);
-    cout << "OBJECT ORIENTED PROGRAMMING PROJECT";
-    gotoline(52, 7);
-    cout << "eMediCare";
-    gotoline(40, 9);
-    //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
-    cout << "Group members: ";
-    gotoline(40, 10);
-    cout << "- Asfandyar Khanzada 22K-4626";
-    gotoline(40, 11);
-    cout << "- Syed Abdullah Bin Tariq 22K-4253";
-    gotoline(40, 12);
-    cout << "- Munnazzar Shahzad 22K-4231";
-    //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-    cout << "\npress any key to continue......";
-    getchar();
 }
