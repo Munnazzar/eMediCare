@@ -1,5 +1,5 @@
-iid2 Drmr.doc2 762 male2 pass2 2 P-2 P-23
-id1 Dr.mr.doc1 7641 male1 pass1 1 P-12
+iid2 Drmr.doc2 762 male2 pass2 1 P-2
+id1 Dr.mr.doc1 7641 male1 pass1 0
 id4 Dr.mr.doc4 7644 male4 pass4 0
 id4 Dr.mr.doc4 7644 male4 pass4 0
 Shahid Dr.Dr.Shahid 03184-48235 Male 12345 0

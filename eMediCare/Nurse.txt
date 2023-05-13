@@ -1,4 +1,4 @@
-Nid1 nurse1 0381 female1 npass1 1 P-12
+Nid1 nurse1 0381 female1 npass1 0
 Nid2 nurse2 0382 female2 npass2 2 P-1236 P-65
 Nid3 nurse3 0383 female3 npass3 0
 Nid3 nurse3 0383 female3 npass3 1 P-1236

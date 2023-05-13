@@ -195,10 +195,6 @@ public:
        PatientsId[NoOfPatients++] = id;
     }
 
-    int getNoOfPatients() {
-        return NoOfPatients;
-    }
-
     void addToFile() {
         ofstream outFile;
         outFile.open("Nurse.txt", ios::app);
@@ -223,29 +219,15 @@ public:
 
     //Tells the name and id of assigned patients to a particular nurse
     void showAssignedPatients(Patient patients[]) {
-        int i = 4, count = 0;
-        gotoline(48, i);
-        cout << "ASSIGNED PATIENTS";
-        gotoline(40, i + 2);
-        cout << "   ID       Name           Gender";
-        gotoline(39, i + 3);
-        cout << "------------------------------------";
-        for (int j = 0; j < NoOfPatients; j++) {
-            for (int k = 0; k < Patient::PatientsCount; k++) {
-                if (PatientsId[j] == patients[k].getID()) {
-                    gotoline(40, i + 4 + count);
-                    cout << count + 1;
-                    gotoline(43, i + 4 + count);
-                    cout << patients[k].getID();
-                    gotoline(52, i + 4 + count);
-                    cout << patients[k].getName();
-                    gotoline(67, i + 4 + count);
-                    cout << patients[k].getGender();
-                    count++;
+        cout << "Assigned Patients:" << endl;
+        for (int i = 0; i < NoOfPatients; i++) {
+            for (int j = 0; j < Patient::PatientsCount; j++) {
+                if (PatientsId[i] == patients[j].getID()) {
+                    cout << "PATIENT NO " << i + 1 << ":" << endl << "\tName: " << patients[j].getID() << endl << "\tId: " << patients[j].getName() << endl;
                 }
             }
+
         }
-        gotoline(40, i + 6 + count);
     }
 
     static void incrementCount() {
@@ -284,30 +266,6 @@ public:
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
         }
         return count;
-    }
-
-    static int printOptions() {
-        int i = 4;
-        int choice;
-        gotoline(50, i + 1);
-        cout << "1) Show Assigned Patients";
-        gotoline(50, i + 2);
-        cout << "2) Return to login page";
-        gotoline(50, i + 4);
-        cout << "Select an option: ";
-        cin >> choice;
-
-        while (choice < 1 || choice >2) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
-            gotoline(47, i + 7);
-            printf("Wrong Input!\n");
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-            gotoline(65, i + 6);
-            cout << "                      ";
-            gotoline(65, i + 6);
-            cin >> choice;
-        }
-        return choice;
     }
 };
 
