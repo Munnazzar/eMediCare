@@ -58,7 +58,7 @@ public:
     static int PatientsCount;
     Patient() { medicineCount = 0; age = 0; }
     Patient(string id, string name, string gender, string contact, int age, string doctorId) :
-        Person(("P-" + id), name, contact, gender), age(age), medicineCount(0), assignedDoctorId(doctorId), assignedNurseId("default"){ 
+        Person(("P-" + id), name, contact, gender), age(age), medicineCount(0), assignedDoctorId(doctorId), assignedNurseId("default") {
     }
 
     void setNurseID(string id) {
@@ -88,10 +88,80 @@ public:
         return true;
     }
 
-    bool addDosage(string weekDay, int hours, int minutes, int medicineNumber) {
-        if (medicineNumber > medicineCount)
+    bool addDosage() {
+        string weekDay;
+        int hours, minutes, medicineNumber;
+        int i = 4;
+
+        if (medicineCount == 0)
             return false;
-        return medicine[medicineNumber - 1].addDosage(weekDay, hours, minutes);
+
+        gotoline(48, i);
+        cout << "Medicines of " << this->id;
+        gotoline(40, i + 2);
+        cout << "   ID    Medicine Name";
+        gotoline(39, i + 3);
+        cout << "-------------------------";
+        for (int n = 0; n < medicineCount; n++) {
+            gotoline(40, i + 4 + n);
+            cout << n + 1;
+            gotoline(43, i + 4 + n);
+            cout << medicine[n].getID();
+            gotoline(52, i + 4 + n);
+            cout << medicine[n].getName();
+        }
+
+        int choice;
+        gotoline(40, 9 + medicineCount);
+        cout << "Select a medicine: ";
+        cin >> medicineNumber;
+        while (medicineNumber < 1 || medicineNumber > medicineCount) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(40, 10 + medicineCount);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(59, 9 + medicineCount);
+            cout << "                      ";
+            gotoline(59, 9 + medicineCount);
+            cin >> medicineNumber;
+        }
+
+        system("cls");
+        gotoline(52, i + 1);
+        cout << "Dosage details";
+
+        gotoline(42, i + 3);
+        cout << "Weekday: ";
+        gotoline(42, i + 4);
+        cout << "Hour: ";
+        gotoline(42, i + 5);
+        cout << "Minute: ";
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+        gotoline(42, i + 6);
+        cout << "Enter time following 24-Hour format";
+        gotoline(51, i + 3);
+        cin >> weekDay;
+        gotoline(48, i + 4);
+        cin >> hours;
+        gotoline(50, i + 5);
+        cin >> minutes;
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+
+        if (!medicine[medicineNumber - 1].addDosage(weekDay, hours, minutes)) {
+            gotoline(42, i + 8);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            cout << "Max dosage reached for this medicine";
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            Sleep(1000);
+            return false;
+        }
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
+        gotoline(52, i + 8);
+        cout << "DOSAGE ADDED SUCCEFULLY!";
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+        Sleep(1000);
+        return true;
     }
 
     void addToFile() {
@@ -105,9 +175,9 @@ public:
         outFile << medicine[0];
         outFile << medicine[1];
         outFile << medicine[2];
-       /* for (int i = 0; i < medicineCount; i++) {
-            outFile << medicine[i];
-        }*/
+        /* for (int i = 0; i < medicineCount; i++) {
+             outFile << medicine[i];
+         }*/
         outFile << endl;
         outFile.close();
     }
@@ -192,7 +262,7 @@ public:
     }
 
     void setPatientId(string id) {
-       PatientsId[NoOfPatients++] = id;
+        PatientsId[NoOfPatients++] = id;
     }
 
     void addToFile() {
@@ -215,6 +285,7 @@ public:
         for (int i = 0; i < NoOfPatients; i++) {
             inFile >> PatientsId[i];
         }
+        return;
     }
 
     //Tells the name and id of assigned patients to a particular nurse
@@ -244,7 +315,7 @@ public:
         cout << "   ID       Name           Gender";
         gotoline(39, i + 3);
         cout << "------------------------------------";
-        for (int n = 0;n < NursesCount;n++) {
+        for (int n = 0; n < NursesCount; n++) {
             if (nurses[n].NoOfPatients < 5) {
                 gotoline(40, i + 4 + count);
                 cout << count + 1;
@@ -278,7 +349,7 @@ public:
     static int DoctorsCount;
     Doctor() { NoOfPatients = 0; }
     Doctor(string id, string password, string name, string gender, string contact) :
-        Employee(("D-"+id), password, "Doctor", ("Dr." + name), gender, contact), NoOfPatients(0) {
+        Employee(("D-" + id), password, "Doctor", ("Dr." + name), gender, contact), NoOfPatients(0) {
     }
 
     void display() {
@@ -292,44 +363,7 @@ public:
         return true;
     }
 
-    bool addMedicine(Patient &patient, int medicineId,string medicineName) {
-        return patient.addMedicine(medicineId, medicineName);
-    }
-
-    bool addDosage(Patient& patient, string weekday, int hours, int minutes, int medicineNumber) {
-        return patient.addDosage(weekday,hours,minutes, medicineNumber);
-    }
-
-    void addToFile() {
-        ofstream outFile;
-        outFile.open("Doctor.txt", ios::app);
-        if (!outFile) {
-            //error message(depends if we are using forms or not) 
-            return;
-        }
-        outFile << id << " " << name << " " << contact << " " << gender << " " << password << " " << NoOfPatients;
-        for (int i = 0; i < NoOfPatients; i++) {
-            outFile << " " << patientsId[i];
-        }
-        outFile << endl;
-        outFile.close();
-    }
-    bool readFile(ifstream& inFile) {
-        inFile >> id >> name >> contact >> gender >> password >> NoOfPatients;
-        for (int i = 0; i < NoOfPatients; i++) {
-            inFile >> patientsId[i];
-        }
-        return true;
-    }
-
-    //assigns nurse to a particular patient
-    bool assignNurse(Nurse& nurse, Patient& patient) {
-        nurse.setPatientId(patient.getID());
-        patient.setNurseID(nurse.getID());
-        return true;
-    }
-
-    bool AssignNurse(Patient patients[],Nurse nurses[]) {
+    bool addMedicine(Patient patients[]) {
         int patientIndexes[5] = { 0 };
         int i = 4, count = 0;
         gotoline(44, i);
@@ -347,7 +381,166 @@ public:
             return false;
         }
 
-        for (int n = 0;n < DoctorsCount;n++) {
+        for (int n = 0; n < DoctorsCount; n++) {
+            if (patients[n].getDoctorID() == this->id) {
+                gotoline(40, i + 4 + count);
+                cout << count + 1;
+                gotoline(43, i + 4 + count);
+                cout << patients[n].getID();
+                gotoline(52, i + 4 + count);
+                cout << patients[n].getName();
+                gotoline(67, i + 4 + count);
+                cout << patients[n].getGender();
+                patientIndexes[count] = n;
+                count++;
+            }
+        }
+
+        int choice;
+        gotoline(40, 10 + NoOfPatients);
+        cout << "Select a patient: ";
+        cin >> choice;
+        while (choice < 1 || choice > NoOfPatients) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(40, 11 + NoOfPatients);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(59, 10 + NoOfPatients);
+            cout << "                      ";
+            gotoline(59, 10 + NoOfPatients);
+            cin >> choice;
+        }
+
+        int Patientindex = patientIndexes[choice - 1];
+
+        system("cls");
+        printHeader();
+
+        int medicineId;
+        string medicineName;
+
+        gotoline(52, i + 1);
+        cout << "Medicine details";
+
+        gotoline(42, i + 3);
+        cout << "ID number: ";
+        gotoline(42, i + 4);
+        cout << "Name: ";
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+        gotoline(52, i + 3);
+        cin >> medicineId;
+        gotoline(48, i + 4);
+        cin >> medicineName;
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
+        gotoline(50, i + 6);
+        cout << "MEDICINE ADDED!";
+        Sleep(1000);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+        return patients[Patientindex].addMedicine(medicineId, medicineName);
+    }
+
+    bool addDosage(Patient patients[]) {
+        int patientIndexes[5] = { 0 };
+        int i = 4, count = 0;
+        gotoline(44, i);
+        cout << "Patinets of " << this->name;
+        gotoline(40, i + 2);
+        cout << "   ID       Name           Gender";
+        gotoline(39, i + 3);
+        cout << "------------------------------------";
+        if (NoOfPatients == 0) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(45, i + 5);
+            cout << "No Patients Assigned";
+            Sleep(1000);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+            return false;
+        }
+
+        for (int n = 0; n < Patient::PatientsCount; n++) {
+            if (patients[n].getDoctorID() == this->id) {
+                gotoline(40, i + 4 + count);
+                cout << count + 1;
+                gotoline(43, i + 4 + count);
+                cout << patients[n].getID();
+                gotoline(52, i + 4 + count);
+                cout << patients[n].getName();
+                gotoline(67, i + 4 + count);
+                cout << patients[n].getGender();
+                patientIndexes[count] = n;
+                count++;
+            }
+        }
+
+        int choice;
+        gotoline(40, 10 + NoOfPatients);
+        cout << "Select a patient: ";
+        cin >> choice;
+        while (choice < 1 || choice > NoOfPatients) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(40, 11 + NoOfPatients);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(58, 10 + NoOfPatients);
+            cout << "                      ";
+            gotoline(58, 10 + NoOfPatients);
+            cin >> choice;
+        }
+
+        int Patientindex = patientIndexes[choice - 1];
+        system("cls");
+        printHeader();
+        return patients[Patientindex].addDosage();
+    }
+
+    void addToFile() {
+        ofstream outFile;
+        outFile.open("Doctor.txt", ios::app);
+        if (!outFile) {
+            //error message(depends if we are using forms or not) 
+            return;
+        }
+        outFile << id << " " << name << " " << contact << " " << gender << " " << password << " " << NoOfPatients;
+        for (int i = 0; i < NoOfPatients; i++) {
+            outFile << " " << patientsId[i];
+        }
+        outFile << endl;
+        outFile.close();
+    }
+    void readFile(ifstream& inFile) {
+        inFile >> id >> name >> contact >> gender >> password >> NoOfPatients;
+        for (int i = 0; i < NoOfPatients; i++) {
+            inFile >> patientsId[i];
+        }
+        return;
+    }
+
+    //assigns nurse to a particular patient
+    bool assignNurse(Nurse& nurse, Patient& patient) {
+        nurse.setPatientId(patient.getID());
+        patient.setNurseID(nurse.getID());
+        return true;
+    }
+
+    bool AssignNurse(Patient patients[], Nurse nurses[]) {
+        int patientIndexes[5] = { 0 };
+        int i = 4, count = 0;
+        gotoline(44, i);
+        cout << "Patinets of " << this->name;
+        gotoline(40, i + 2);
+        cout << "   ID       Name           Gender";
+        gotoline(39, i + 3);
+        cout << "------------------------------------";
+        if (NoOfPatients == 0) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(45, i + 5);
+            cout << "No Patients Assigned";
+            Sleep(1000);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+            return false;
+        }
+
+        for (int n = 0; n < DoctorsCount; n++) {
             if (patients[n].getDoctorID() == this->id) {
                 gotoline(40, i + 4 + count);
                 cout << count + 1;
@@ -381,7 +574,7 @@ public:
 
         int NursesIndex[10];
         int availableNurses = Nurse::printAvailableNurses(nurses, NursesIndex);
-        
+
         if (availableNurses == 0)
             return false;
 
@@ -418,22 +611,22 @@ public:
     static int printAvailableDoctors(Doctor doctors[], int indexes[]) {
         system("cls");
         printHeader();
-        int i = 4, count=0;
+        int i = 4, count = 0;
         gotoline(48, i);
         cout << "AVAILABLE DOCTORS";
         gotoline(40, i + 2);
         cout << "   ID       Name           Gender";
         gotoline(39, i + 3);
         cout << "------------------------------------";
-        for (int n = 0;n < DoctorsCount;n++) {
+        for (int n = 0; n < DoctorsCount; n++) {
             if (doctors[n].NoOfPatients < 5) {
                 gotoline(40, i + 4 + count);
-                cout << count+1;
-                gotoline(43, i + 4+count);
+                cout << count + 1;
+                gotoline(43, i + 4 + count);
                 cout << doctors[n].id;
-                gotoline(52, i + 4+count);
+                gotoline(52, i + 4 + count);
                 cout << doctors[n].name;
-                gotoline(67, i + 4+count);
+                gotoline(67, i + 4 + count);
                 cout << doctors[n].gender;
                 indexes[count] = n;
                 count++;
@@ -512,7 +705,7 @@ public:
     }*/
 
     bool addPatient(Patient patients[], Doctor doctors[]) {
-        if (Patient::PatientsCount>= 10) {
+        if (Patient::PatientsCount >= 10) {
             return false;
         }
 
@@ -551,17 +744,17 @@ public:
 
         int doctorsIndexes[10];
         int availableDoctors = Doctor::printAvailableDoctors(doctors, doctorsIndexes);
-        
+
         if (availableDoctors == 0)
             return false;
-        
+
         int choice, index;
         gotoline(40, 10 + availableDoctors);
         cout << "Select a doctor for the patient: ";
         cin >> choice;
         while (choice < 1 || choice > availableDoctors) {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
-            gotoline(40, 11+availableDoctors);
+            gotoline(40, 11 + availableDoctors);
             printf("Wrong Input!\n");
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
             gotoline(73, 10 + availableDoctors);
@@ -570,8 +763,8 @@ public:
             cin >> choice;
         }
 
-        index = doctorsIndexes[choice-1];
-        doctors[index].setPatientId("P-"+id);
+        index = doctorsIndexes[choice - 1];
+        doctors[index].setPatientId("P-" + id);
 
         //adding patient to file and array
         patients[Patient::PatientsCount] = Patient(id, name, gender, contact, age, doctors[index].getID());
@@ -579,7 +772,7 @@ public:
         Patient::incrementCount();
 
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
-        gotoline(50, 12+availableDoctors);
+        gotoline(50, 12 + availableDoctors);
         cout << "RECORD ADDED!";
         Sleep(1000);
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
@@ -675,7 +868,7 @@ public:
         cin >> contact;
 
 
-        nurses[Nurse::NursesCount] = Nurse(id,password,name,gender,contact);
+        nurses[Nurse::NursesCount] = Nurse(id, password, name, gender, contact);
         nurses[Nurse::NursesCount].addToFile();
         Nurse::incrementCount();
 
@@ -691,7 +884,7 @@ public:
         AdminsCount++;
     }
 
-    static int printOptions(){
+    static int printOptions() {
         int i = 4;
         int choice;
         gotoline(50, i + 1);
@@ -756,6 +949,59 @@ bool initializeAll(Doctor doctors[], Nurse nurses[], Admin admins[], Patient pat
         patients[Patient::PatientsCount].readFile(inFile);
     }
     inFile.close();
+
+    /*inFile.open("Doctor.txt", ios::in);
+    for(int i =0 ; i<sizeof("Doctor.txt")/sizeof(Doctor); i++) {
+        Doctor::incrementCount();
+        doctors[Doctor::DoctorsCount].readFile(inFile);
+    }
+    inFile.close();
+
+    inFile.open("Nurse.txt", ios::in);
+    for (int i = 0; i < sizeof("Nurse.txt") / sizeof(Nurse); i++) {
+        Nurse::incrementCount();
+        nurses[Nurse::NursesCount].readFile(inFile);
+    }
+    inFile.close();
+
+    inFile.open("Admin.txt", ios::in);
+    for (int i = 0; i < sizeof("Admin.txt") / sizeof(Admin); i++) {
+        Admin::incrementCount();
+        admins[Admin::AdminsCount].readFile(inFile);
+    }
+    inFile.close();
+
+    inFile.open("Patients.txt", ios::in);
+    for (int i = 0; i < sizeof("Patients.txt") / sizeof(Patient); i++) {
+        Patient::incrementCount();
+        patients[Patient::PatientsCount].readFile(inFile);
+    }
+    inFile.close();*/
+
+    /*inFile.open("Doctor.txt", ios::in);
+    while (doctors[Doctor::DoctorsCount].readFile(inFile)) {
+        Doctor::incrementCount();
+    }
+    inFile.close();
+
+    inFile.open("Nurse.txt", ios::in);
+    while (nurses[Nurse::NursesCount].readFile(inFile)) {
+        Nurse::incrementCount();
+    }
+    inFile.close();
+
+    inFile.open("Admin.txt", ios::in);
+    while (admins[Admin::AdminsCount].readFile(inFile)) {
+        Admin::incrementCount();
+    }
+    inFile.close();
+
+    inFile.open("Patients.txt", ios::in);
+    while (patients[Patient::PatientsCount].readFile(inFile)) {
+        Patient::incrementCount();
+    }
+    inFile.close();*/
+
     return true;
 }
 
@@ -768,7 +1014,7 @@ void storeData(Doctor doctors[], Nurse nurses[], Admin admins[], Patient patient
     outFile.close();
     outFile.open("Patients.txt", ios::out | ios::trunc);
     outFile.close();
-    
+
     for (int i = 0; i < Doctor::DoctorsCount; i++) {
         doctors[i].addToFile();
     }
@@ -783,6 +1029,7 @@ void storeData(Doctor doctors[], Nurse nurses[], Admin admins[], Patient patient
         patients[i].addToFile();
     }
 }
+
 
 void notificationFunction(Patient* patients)
 {
