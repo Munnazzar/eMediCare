@@ -39,6 +39,7 @@ void intro() {
 class Login {
 private:
 	int opt;
+	int index;
 	Doctor *doctors;
 	Nurse *nurses;
 	Admin *admins;
@@ -50,15 +51,25 @@ private:
 		switch (opt) {
 		case 1:
 			for (int i=0; i < Admin::AdminsCount; i++)
-				if (admins[i].validate(id, pass))
+				if (admins[i].validate(id, pass)) {
+					this->index = i;
 					return true;
+				}
 			return false;
 		case 2:
-			cout << "DOCTOR LOGIN";
-			break;
+			for (int i = 0; i < Doctor::DoctorsCount; i++)
+				if (doctors[i].validate(id, pass)) {
+					this->index = i;
+					return true;
+				}
+			return false;
 		case 3:
-			cout << "NURSE LOGIN";
-			break;
+			for (int i = 0; i < Nurse::NursesCount; i++)
+				if (nurses[i].validate(id, pass)) {
+					this->index=i;
+					return true;
+				}
+			return false;
 		}
 		return false;
 	}
@@ -105,14 +116,14 @@ private:
 		}
 	}
 public:
-	Login(Doctor doctors[], Nurse nurses[], Admin admins[], Patient patients[]): opt(0), id("id"), pass("pass") {
+	Login(Doctor doctors[], Nurse nurses[], Admin admins[], Patient patients[]): opt(0), id("id"), pass("pass"), index(-1) {
 		this->doctors = doctors;
 		this->nurses = nurses;
 		this->admins = admins;
 		this->patients = patients;
 	}
 
-	void Initiate(string &id , string &pass) {
+	int Initiate(string &id , string &pass, int &index) {
 		int i = 4;
 		gotoline(49, i);
 		cout << "You are a: ";
@@ -122,26 +133,125 @@ public:
 		cout << "2) doctor";
 		gotoline(50, i + 3);
 		cout << "3) nurse";
+		gotoline(50, i + 4);
+		cout << "4) Exit";
 
-		gotoline(47, i + 5);
+		gotoline(47, i + 6);
 		cout << "Select an option: ";
 		cin >> opt;
 
-		while (opt < 1 || opt >3) {
+		while (opt < 1 || opt >4) {
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
-			gotoline(52, i + 6);
+			gotoline(52, i + 7);
 			printf("Wrong Input!\n");
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-			gotoline(64, i + 5);
+			gotoline(64, i + 6);
 			cout << "                      ";
-			gotoline(65, i + 5);
+			gotoline(65, i + 6);
 			cin >> opt;
 		}
+
+		if (opt == 4)
+			return opt;
+
+
 		this->loginPage();
 		id = this->id;
 		pass = this->pass;
+		index = this->index;
+		return opt;
 	}
 };
+
+
+
+int main() {
+	//HANDLE  hConsole;
+	system("COLOR F0");
+	intro();
+
+
+	Admin admins[5];
+	Doctor doctors[10];
+	Nurse nurses[10];
+	Patient patients[20];
+
+	initializeAll(doctors, nurses, admins, patients);
+	string id, pass;
+	int accountType, index;
+	bool continueFlag=true;
+
+	system("cls");
+	while (continueFlag) {
+		printHeader();
+		Login login(doctors, nurses, admins, patients);
+		accountType = login.Initiate(id, pass, index);
+		login.~Login();
+		gotoline(9, 0);
+		cout << "account type";
+
+		switch (accountType) {
+		case 1:
+			int choice;
+			do {
+				system("cls");
+				printHeader();
+				choice = Admin::printOptions();
+				switch (choice) {
+				case 1:
+					//add doctor
+					system("cls");
+					printHeader();
+					if (!admins[index].addDoctor(doctors)) {
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Cannot add another doctor!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				case 2:
+					//add nurse
+					system("cls");
+					printHeader();
+					if (!admins[index].addNurse(nurses)) {
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Cannot add another nurse!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				case 3:
+					//add patient
+					system("cls");
+					printHeader();
+					if (!admins[index].addPatient(patients,doctors)) {
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Cannot add another patient!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				}
+
+			}while(choice!=4);
+			break;
+		case 2:
+			//doctor
+			break;
+		case 3:
+			//nurse
+			break;
+		case 4:
+			continueFlag = false;
+		}
+	system("cls");
+
+	}
+}
+
 
 //int loginPage(string id, string pass) {
 //	int i = 4, opt;
@@ -210,27 +320,6 @@ public:
 //	}
 //	return opt;
 //}
-
-
-int main() {
-	HANDLE  hConsole;
-	system("COLOR F0");
-	intro();
-	system("cls");
-	printHeader();
-
-
-	Admin admins[10];
-	Doctor doctors[10];
-	Nurse nurses[10];
-	Patient patients[10];
-
-	initializeAll(doctors, nurses, admins, patients);
-	string id, pass;
-
-	Login login(doctors, nurses, admins, patients);
-	login.Initiate(id,pass);
-}
 
 
 /*fstream file;

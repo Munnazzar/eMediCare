@@ -44,7 +44,7 @@ public:
     static int PatientsCount;
     Patient() { medicineCount = 0; age = 0; }
     Patient(string id, string name, string gender, string contact, int age, string doctorId) :
-        Person(id, name, contact, gender), age(age), medicineCount(0), assignedDoctorId(doctorId) {
+        Person(("P-" + id), name, contact, gender), age(age), medicineCount(0), assignedDoctorId(doctorId) {
     }
 
     void setNurseID(string id) {
@@ -162,7 +162,7 @@ public:
     static int NursesCount;
     Nurse() { NoOfPatients = 0; }
     Nurse(string id, string password, string name, string gender, string contact) :
-        Employee(id, password, "Nurse", name, gender, contact), NoOfPatients(0) {
+        Employee(("N-" + id), password, "Nurse", name, gender, contact), NoOfPatients(0) {
     }
 
     void display() {
@@ -226,7 +226,7 @@ public:
     static int DoctorsCount;
     Doctor() { NoOfPatients = 0; }
     Doctor(string id, string password, string name, string gender, string contact) :
-        Employee(id, password, "Doctor", ("Dr." + name), gender, contact), NoOfPatients(0) {
+        Employee(("D-"+id), password, "Doctor", ("Dr." + name), gender, contact), NoOfPatients(0) {
     }
 
     void display() {
@@ -317,36 +317,164 @@ public:
         patient.setDoctorID(doctor.getID());
     }*/
 
-    bool addPatient(Patient patients[], Doctor& doctor, string id, string name, string gender, string contact, int age) {
-        if (doctor.setPatientId(id)) {
-            patients[Patient::PatientsCount] = Patient(id, name, gender, contact, age, doctor.getID());
-            patients[Patient::PatientsCount].addToFile();
-            Patient::incrementCount();
-            return true;
-        }
-        return false;
-    }
-
-    bool addDoctor(Doctor* doctors, string id, string name, string password, string gender, string contact) {
-        if (Doctor::DoctorsCount >= 10) {
-            //error message
+    bool addPatient(Patient patients[], Doctor doctors[]) {
+        if (Patient::PatientsCount>= 10) {
             return false;
         }
+
+        string id, name, gender, contact;
+        int age;
+        int i = 4;
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+        gotoline(50, i);
+        cout << "FILL OUT THE FORM";
+        gotoline(52, i + 1);
+        cout << "Patient details";
+
+        gotoline(42, i + 3);
+        cout << "ID: ";
+        gotoline(42, i + 4);
+        cout << "Name: ";
+        gotoline(42, i + 5);
+        cout << "Age: ";
+        gotoline(42, i + 6);
+        cout << "Gender: ";
+        gotoline(42, i + 7);
+        cout << "Contact: ";
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+        gotoline(46, i + 3);
+        cout << "P-";
+        cin >> id;
+        gotoline(48, i + 4);
+        cin >> name;
+        gotoline(47, i + 5);
+        cin >> age;
+        gotoline(50, i + 6);
+        cin >> gender;
+        gotoline(51, i + 7);
+        cin >> contact;
+
+        //some way to allow selecting a available doctor for the patient
+        //if (doctor.setPatientId(id)) {
+        //    patients[Patient::PatientsCount] = Patient(id, name, gender, contact, age, doctor.getID());
+        //    patients[Patient::PatientsCount].addToFile();
+        //    Patient::incrementCount();
+        //    return true;
+        //}
+        //return false;
+
+        //adding patient to file and array
+        /*patients[Patient::PatientsCount] = Patient(id, password, name, gender, contact);
+        patients[Patient::PatientsCount].addToFile();
+        Patient::incrementCount();
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
+        gotoline(50, i + 9);
+        cout << "RECORD ADDED!";
+        Sleep(1000);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);*/
+
+        return true;
+    }
+
+    bool addDoctor(Doctor* doctors) {
+        if (Doctor::DoctorsCount >= 10) {
+            return false;
+        }
+
+        string id, name, password, gender, contact;
+        int i = 4;
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+        gotoline(50, i);
+        cout << "FILL OUT THE FORM";
+        gotoline(52, i + 1);
+        cout << "Doctor details";
+
+        gotoline(42, i + 3);
+        cout << "ID: ";
+        gotoline(42, i + 4);
+        cout << "Name: ";
+        gotoline(42, i + 5);
+        cout << "Password: ";
+        gotoline(42, i + 6);
+        cout << "Gender: ";
+        gotoline(42, i + 7);
+        cout << "Contact: ";
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+        gotoline(46, i + 3);
+        cout << "D-";
+        cin >> id;
+        gotoline(48, i + 4);
+        cout << "Dr.";
+        cin >> name;
+        gotoline(52, i + 5);
+        cin >> password;
+        gotoline(50, i + 6);
+        cin >> gender;
+        gotoline(51, i + 7);
+        cin >> contact;
 
         doctors[Doctor::DoctorsCount] = Doctor(id, password, name, gender, contact);
         doctors[Doctor::DoctorsCount].addToFile();
         Doctor::incrementCount();
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
+        gotoline(50, i + 9);
+        cout << "RECORD ADDED!";
+        Sleep(1000);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+
         return true;
     }
 
-    bool addNurse(Nurse nurses[], string id, string name, string password, string gender, string contact) {
-        if (Nurse::NursesCount >= 10) {
-            //error message
+    bool addNurse(Nurse nurses[]) {
+        if (Nurse::NursesCount >= 10)
             return false;
-        }
+
+        string id, name, password, gender, contact;
+        int i = 4;
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+        gotoline(50, i);
+        cout << "FILL OUT THE FORM";
+        gotoline(52, i + 1);
+        cout << "Nurse details";
+
+        gotoline(42, i + 3);
+        cout << "ID: ";
+        gotoline(42, i + 4);
+        cout << "Name: ";
+        gotoline(42, i + 5);
+        cout << "Password: ";
+        gotoline(42, i + 6);
+        cout << "Gender: ";
+        gotoline(42, i + 7);
+        cout << "Contact: ";
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+        gotoline(46, i + 3);
+        cout << "N-";
+        cin >> id;
+        gotoline(48, i + 4);
+        cin >> name;
+        gotoline(52, i + 5);
+        cin >> password;
+        gotoline(50, i + 6);
+        cin >> gender;
+        gotoline(51, i + 7);
+        cin >> contact;
+
+
         nurses[Nurse::NursesCount] = Nurse(id,password,name,gender,contact);
         nurses[Nurse::NursesCount].addToFile();
         Nurse::incrementCount();
+
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
+        gotoline(50, i + 9);
+        cout << "RECORD ADDED!";
+        Sleep(1000);
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
         return true;
     }
 
@@ -354,6 +482,34 @@ public:
         AdminsCount++;
     }
 
+    static int printOptions(){
+        int i = 4;
+        int choice;
+        gotoline(50, i + 1);
+        cout << "1) Add a doctor";
+        gotoline(50, i + 2);
+        cout << "2) Add a nurse";
+        gotoline(50, i + 3);
+        cout << "3) Add a patient";
+        gotoline(50, i + 4);
+        cout << "4) Return to Login page";
+
+        gotoline(47, i + 6);
+        cout << "Select an option: ";
+        cin >> choice;
+
+        while (choice < 1 || choice >4) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(47, i + 7);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(65, i + 6);
+            cout << "                      ";
+            gotoline(65, i + 6);
+            cin >> choice;
+        }
+        return choice;
+    }
 };
 
 int Doctor::DoctorsCount = -1;
