@@ -37,7 +37,9 @@ public:
     string getID() {
         return id;
     }
-
+    string getGender() {
+        return gender;
+    }
     virtual void addToFile() = 0;
 };
 
@@ -184,12 +186,8 @@ public:
         std::cout << "id" << id << " name: " << name << "contact: " << contact << " gender: " << gender << " password: " << password << " num:" << NoOfPatients << endl;
     }
 
-    bool setPatientId(string id) {
-        if (NoOfPatients >= 5) { //checking workload
-            return false;
-        }
-        PatientsId[NoOfPatients++] = id;
-        return true;
+    void setPatientId(string id) {
+       PatientsId[NoOfPatients++] = id;
     }
 
     void addToFile() {
@@ -229,6 +227,40 @@ public:
 
     static void incrementCount() {
         NursesCount++;
+    }
+
+    static int printAvailableNurses(Nurse nurses[], int indexes[]) {
+        system("cls");
+        printHeader();
+        int i = 4, count = 0;
+        gotoline(48, i);
+        cout << "AVAILABLE NURSES";
+        gotoline(40, i + 2);
+        cout << "   ID       Name           Gender";
+        gotoline(39, i + 3);
+        cout << "------------------------------------";
+        for (int n = 0;n < NursesCount;n++) {
+            if (nurses[n].NoOfPatients < 5) {
+                gotoline(40, i + 4 + count);
+                cout << count + 1;
+                gotoline(43, i + 4 + count);
+                cout << nurses[n].id;
+                gotoline(52, i + 4 + count);
+                cout << nurses[n].name;
+                gotoline(67, i + 4 + count);
+                cout << nurses[n].gender;
+                indexes[count] = n;
+                count++;
+            }
+        }
+        if (count == 0) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(45, i + 5);
+            cout << "No Available Nurses";
+            Sleep(1000);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+        }
+        return count;
     }
 };
 
@@ -287,9 +319,88 @@ public:
 
     //assigns nurse to a particular patient
     bool assignNurse(Nurse& nurse, Patient& patient) {
-        if (nurse.setPatientId(patient.getID())) {
-            //message indication that nurses has been assigned to the patient
-            patient.setNurseID(nurse.getID());
+        nurse.setPatientId(patient.getID());
+        patient.setNurseID(nurse.getID());
+        return true;
+    }
+
+    bool AssignNurse(Patient patients[],Nurse nurses[]) {
+        int patientIndexes[5] = { 0 };
+        int i = 4, count = 0;
+        gotoline(44, i);
+        cout << "Patinets of " << this->name;
+        gotoline(40, i + 2);
+        cout << "   ID       Name           Gender";
+        gotoline(39, i + 3);
+        cout << "------------------------------------";
+        if (NoOfPatients == 0) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(45, i + 5);
+            cout << "No Patients Assigned";
+            Sleep(1000);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+            return false;
+        }
+
+        for (int n = 0;n < DoctorsCount;n++) {
+            if (patients[n].getDoctorID() == this->id) {
+                gotoline(40, i + 4 + count);
+                cout << count + 1;
+                gotoline(43, i + 4 + count);
+                cout << patients[n].getID();
+                gotoline(52, i + 4 + count);
+                cout << patients[n].getName();
+                gotoline(67, i + 4 + count);
+                cout << patients[n].getGender();
+                patientIndexes[count] = n;
+                count++;
+            }
+        }
+
+        int choice;
+        gotoline(40, 10 + NoOfPatients);
+        cout << "Select a patient: ";
+        cin >> choice;
+        while (choice < 1 || choice > NoOfPatients) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(40, 11 + NoOfPatients);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(59, 10 + NoOfPatients);
+            cout << "                      ";
+            gotoline(59, 10 + NoOfPatients);
+            cin >> choice;
+        }
+
+        int Patientindex = patientIndexes[choice - 1];
+
+        int NursesIndex[10];
+        int availableNurses = Nurse::printAvailableNurses(nurses, NursesIndex);
+        
+        if (availableNurses == 0)
+            return false;
+
+        gotoline(40, 10 + availableNurses);
+        cout << "Select a nurse for the patient: ";
+        cin >> choice;
+        while (choice < 1 || choice > availableNurses) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(40, 11 + availableNurses);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(72, 10 + availableNurses);
+            cout << "                      ";
+            gotoline(72, 10 + availableNurses);
+            cin >> choice;
+        }
+
+        int NurseIndex = NursesIndex[choice - 1];
+        if (assignNurse(nurses[NurseIndex], patients[Patientindex])) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
+            gotoline(50, 12 + availableNurses);
+            cout << "NURSE ASSIGGNED!";
+            Sleep(1000);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
             return true;
         }
         return false;
@@ -312,7 +423,7 @@ public:
         for (int n = 0;n < DoctorsCount;n++) {
             if (doctors[n].NoOfPatients < 5) {
                 gotoline(40, i + 4 + count);
-                cout << n+1;
+                cout << count+1;
                 gotoline(43, i + 4+count);
                 cout << doctors[n].id;
                 gotoline(52, i + 4+count);
@@ -331,6 +442,35 @@ public:
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
         }
         return count;
+    }
+
+    static int printOptions() {
+        int i = 4;
+        int choice;
+        gotoline(50, i + 1);
+        cout << "1) Assign Nurse to patient";
+        gotoline(50, i + 2);
+        cout << "2) Add Medcine for a patient";
+        gotoline(50, i + 3);
+        cout << "3) Add dosage for a patient";
+        gotoline(50, i + 4);
+        cout << "4) Return to Login page";
+
+        gotoline(47, i + 6);
+        cout << "Select an option: ";
+        cin >> choice;
+
+        while (choice < 1 || choice >4) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(47, i + 7);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(65, i + 6);
+            cout << "                      ";
+            gotoline(65, i + 6);
+            cin >> choice;
+        }
+        return choice;
     }
 };
 

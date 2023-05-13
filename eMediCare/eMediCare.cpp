@@ -177,10 +177,9 @@ int main() {
 		login.~Login();
 		gotoline(9, 0);
 		cout << "account type";
-
+		int choice;
 		switch (accountType) {
 		case 1:
-			int choice;
 			do {
 				system("cls");
 				printHeader();
@@ -227,6 +226,55 @@ int main() {
 			}while(choice!=4);
 			break;
 		case 2:
+			//doctor
+			do {
+				system("cls");
+				printHeader();
+				choice = Doctor::printOptions();
+				switch (choice) {
+				case 1:
+					//assign nurse
+					system("cls");
+					printHeader();
+
+					if (!doctors[index].AssignNurse(patients, nurses)) {
+						system("cls");
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Operation Failed!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				case 2:
+					//add medicine
+					system("cls");
+					printHeader();
+					
+
+					/*if (!doctors[index].assignNurse(nurses, patients) {
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Cannot add another nurse!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}*/
+					break;
+				case 3:
+					//add dosage
+					system("cls");
+					printHeader();
+					if (!admins[index].addPatient(patients,doctors)) {
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Cannot add another patient!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				}
+
+			}while(choice!=4);
 			//doctor
 			break;
 		case 3:
