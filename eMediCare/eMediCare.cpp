@@ -4,16 +4,6 @@
 #include <iostream>
 #include <windows.h>
 
-
-void printHeader() {
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 243);
-	gotoline(0, 0);
-	cout << char(220) << char(219) << char(220) << " e-MediCare";
-	gotoline(1, 1);
-	cout << char(223);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-}
-
 void intro() {
 	gotoline(40, 5);
 	cout << "OBJECT ORIENTED PROGRAMMING PROJECT";
@@ -32,7 +22,7 @@ void intro() {
 	gotoline(40, 13);
 	cout << "- Munnazzar Shahzad (22K-4231)";
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-	cout << endl<< "\npress any key to continue......";
+	cout << endl << "\npress any key to continue......";
 	getchar();
 }
 
@@ -40,17 +30,17 @@ class Login {
 private:
 	int opt;
 	int index;
-	Doctor *doctors;
-	Nurse *nurses;
-	Admin *admins;
-	Patient *patients;
+	Doctor* doctors;
+	Nurse* nurses;
+	Admin* admins;
+	Patient* patients;
 	string id;
 	string pass;
 
 	bool validAccount() {
 		switch (opt) {
 		case 1:
-			for (int i=0; i < Admin::AdminsCount; i++)
+			for (int i = 0; i < Admin::AdminsCount; i++)
 				if (admins[i].validate(id, pass)) {
 					this->index = i;
 					return true;
@@ -66,7 +56,7 @@ private:
 		case 3:
 			for (int i = 0; i < Nurse::NursesCount; i++)
 				if (nurses[i].validate(id, pass)) {
-					this->index=i;
+					this->index = i;
 					return true;
 				}
 			return false;
@@ -110,20 +100,20 @@ private:
 			printHeader();
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
 			i = 5;
-			gotoline(49, i-1);
+			gotoline(49, i - 1);
 			cout << "Invalid account details\n";
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 		}
 	}
 public:
-	Login(Doctor doctors[], Nurse nurses[], Admin admins[], Patient patients[]): opt(0), id("id"), pass("pass"), index(-1) {
+	Login(Doctor doctors[], Nurse nurses[], Admin admins[], Patient patients[]) : opt(0), id("id"), pass("pass"), index(-1) {
 		this->doctors = doctors;
 		this->nurses = nurses;
 		this->admins = admins;
 		this->patients = patients;
 	}
 
-	int Initiate(string &id , string &pass, int &index) {
+	int Initiate(string& id, string& pass, int& index) {
 		int i = 4;
 		gotoline(49, i);
 		cout << "You are a: ";
@@ -162,8 +152,6 @@ public:
 		return opt;
 	}
 };
-
-
 
 int main() {
 	//HANDLE  hConsole;
@@ -250,6 +238,8 @@ int main() {
 	system("cls");
 
 	}
+	cout << patients[0].getDoctorID();
+	storeData(doctors, nurses, admins, patients);
 }
 
 
