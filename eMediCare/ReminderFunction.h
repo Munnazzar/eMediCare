@@ -3,9 +3,11 @@
 #include <string>
 #include <chrono>
 #include <ctime>
+#include <fstream>
+#include "EmployeesAndPatients.h"
 using namespace std;
 
-bool reminder(string input_weekday, int input_hour, int input_minute)      //a function that returns a boolean, in case the current time and weekday matches with the given time and weekday
+bool reminder(string input_weekday, int input_total_minutes)      //a function that returns a boolean, in case the current time and weekday matches with the given time and weekday
 {
     // Get current time and weekday
     auto now = chrono::system_clock::now();                                // gets the current time from the system clock
@@ -51,3 +53,4 @@ bool reminder(string input_weekday, int input_hour, int input_minute)      //a f
         return false;       //returns false if the given time and weekday does not matches with the current time and weekday
     }
 }
+

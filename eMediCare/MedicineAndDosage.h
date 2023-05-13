@@ -11,11 +11,13 @@ private:
 	unsigned int MedicineID;
 	char MedicineName[20];
 
+	
+
+public:
 	int dosageTimings[7][3]; // row number would be the weekday, and each weekday usually has max 3 dosages
 	// my approach with this is that each column of the weekday would store the sum of hours and minutes in the 24 hours format
 	bool flag[7][3];
 
-public:
 	MedicineAndDosage() {
 		MedicineID = -1;
 		strcpy_s(MedicineName, "default");
@@ -105,6 +107,8 @@ public:
 			cout << endl;
 		}
 	}
+
+	string getName(void) { return this->MedicineName; }
 };
 
 void operator << (ofstream& outfile, MedicineAndDosage& obj) {
