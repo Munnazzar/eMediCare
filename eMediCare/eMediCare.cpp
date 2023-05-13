@@ -167,7 +167,7 @@ int main() {
 	initializeAll(doctors, nurses, admins, patients);
 	string id, pass;
 	int accountType, index;
-	bool continueFlag=true;
+	bool continueFlag = true;
 
 	system("cls");
 	while (continueFlag) {
@@ -213,7 +213,7 @@ int main() {
 					//add patient
 					system("cls");
 					printHeader();
-					if (!admins[index].addPatient(patients,doctors)) {
+					if (!admins[index].addPatient(patients, doctors)) {
 						gotoline(45, 6);
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
 						printf("Cannot add another patient!\n");
@@ -223,7 +223,7 @@ int main() {
 					break;
 				}
 
-			}while(choice!=4);
+			} while (choice != 4);
 			break;
 		case 2:
 			//doctor
@@ -250,31 +250,31 @@ int main() {
 					//add medicine
 					system("cls");
 					printHeader();
-					
-
-					/*if (!doctors[index].assignNurse(nurses, patients) {
+					if (!doctors[index].addMedicine(patients)) {
+						system("cls");
 						gotoline(45, 6);
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
-						printf("Cannot add another nurse!\n");
+						printf("Operation Failed!\n");
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 						Sleep(1000);
-					}*/
+					}
 					break;
 				case 3:
 					//add dosage
 					system("cls");
 					printHeader();
-					if (!admins[index].addPatient(patients,doctors)) {
+					if (!doctors[index].addDosage(patients)) {
+						system("cls");
 						gotoline(45, 6);
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
-						printf("Cannot add another patient!\n");
+						printf("Operation Failed!\n");
 						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 						Sleep(1000);
 					}
 					break;
 				}
 
-			}while(choice!=4);
+			} while (choice != 4);
 			//doctor
 			break;
 		case 3:
@@ -283,7 +283,7 @@ int main() {
 		case 4:
 			continueFlag = false;
 		}
-	system("cls");
+		system("cls");
 
 	}
 	cout << patients[0].getDoctorID();
@@ -394,7 +394,3 @@ int main() {
 
 	//Admin admin("123", "pass", "admin", "other", "036581");
 	//initializeAll(doctors, nurses, admins, patients);
-
-
-
-
