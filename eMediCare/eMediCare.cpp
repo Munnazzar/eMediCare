@@ -302,7 +302,7 @@ int main() {
 				}
 				else {
 					nurses[index].showAssignedPatients(patients);
-					
+					printf("Press any key to return to login page...");
 					choice = int(_getch());
 					choice = 2;
 				}
