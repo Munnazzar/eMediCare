@@ -3,8 +3,3 @@ Nid2 nurse2 0382 female2 npass2 0
 Nid3 nurse3 0383 female3 npass3 0
 Nid3 nurse3 0383 female3 npass3 0
 N-136 Nurse 03156 Male 1234 0
-Nid1 nurse1 0381 female1 npass1 0
-Nid2 nurse2 0382 female2 npass2 0
-Nid3 nurse3 0383 female3 npass3 0
-Nid3 nurse3 0383 female3 npass3 0
-N-136 Nurse 03156 Male 1234 0

@@ -162,7 +162,7 @@ int main() {
 	Admin admins[5];
 	Doctor doctors[10];
 	Nurse nurses[10];
-	Patient patients[20];
+	Patient patients[10];
 
 	initializeAll(doctors, nurses, admins, patients);
 	string id, pass;
