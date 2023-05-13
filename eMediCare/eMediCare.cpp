@@ -22,7 +22,7 @@ void intro() {
 	gotoline(40, 13);
 	cout << "- Munnazzar Shahzad (22K-4231)";
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-	cout << endl << "\npress any key to continue......";
+	cout << endl << "\npress Enter to continue......";
 	std::cin.get();
 }
 
@@ -279,6 +279,29 @@ int main() {
 			break;
 		case 3:
 			//nurse
+			system("cls");
+			printHeader();
+			choice = Nurse::printOptions();
+			switch (choice) {
+			case 1:
+				//show assigned patients
+				system("cls");
+				printHeader();
+				if (nurses[index].getNoOfPatients() == 0) {
+					gotoline(45, 6);
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+					printf("No patients are assigned to this nurse!\n");
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+					Sleep(1000);
+				}
+				else {
+					nurses[index].showAssignedPatients(patients);
+					printf("Press 0 to return to login page...");
+					cin >> choice;
+					if (choice == 0)
+						choice = 2;
+				}
+			} while (choice != 2);
 			break;
 		case 4:
 			continueFlag = false;

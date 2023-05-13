@@ -32,6 +32,10 @@ public:
 		}
 	}
 
+	unsigned int getID() {
+		return MedicineID;
+	}
+
 	MedicineAndDosage(unsigned int id, string MedicineName) : MedicineID(id) {
 		strcpy_s(this->MedicineName, 20, MedicineName.c_str());
 		for (int i = 0; i < 7; i++)
