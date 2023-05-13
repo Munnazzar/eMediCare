@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <windows.h>
+#include <thread>
 
 void intro() {
 	gotoline(40, 5);
@@ -168,6 +169,9 @@ int main() {
 	string id, pass;
 	int accountType, index;
 	bool continueFlag = true;
+
+	std::thread reminderThread(notificationFunction, patients);
+	reminderThread.detach();
 
 	system("cls");
 	while (continueFlag) {
