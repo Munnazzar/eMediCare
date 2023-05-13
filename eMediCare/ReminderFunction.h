@@ -40,7 +40,6 @@ bool reminder(string input_weekday, int input_hour, int input_minute)      //a f
 
     // Calculate total minutes for current time and input time
     int current_total_minutes = current_hour * 60 + current_minute;
-    int input_total_minutes = input_hour * 60 + input_minute;
 
     // Compare total minutes and weekday
     if (current_total_minutes == input_total_minutes && current_weekday == weekdays[input_weekday_index])
