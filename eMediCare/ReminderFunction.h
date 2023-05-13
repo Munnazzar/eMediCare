@@ -4,6 +4,7 @@
 #include <chrono>
 #include <ctime>
 #include <fstream>
+#include "EmployeesAndPatients.h"
 using namespace std;
 
 bool reminder(string input_weekday, int input_total_minutes)      //a function that returns a boolean, in case the current time and weekday matches with the given time and weekday
@@ -53,9 +54,3 @@ bool reminder(string input_weekday, int input_total_minutes)      //a function t
     }
 }
 
-void notificationFunction()
-{
-    fstream file;
-
-
-}
