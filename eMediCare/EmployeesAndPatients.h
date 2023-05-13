@@ -53,7 +53,7 @@ public:
     static int PatientsCount;
     Patient() { medicineCount = 0; age = 0; }
     Patient(string id, string name, string gender, string contact, int age, string doctorId) :
-        Person(("P-" + id), name, contact, gender), age(age), medicineCount(0), assignedDoctorId(doctorId) {
+        Person(("P-" + id), name, contact, gender), age(age), medicineCount(0), assignedDoctorId(doctorId), assignedNurseId("default"){ 
     }
 
     void setNurseID(string id) {
@@ -97,18 +97,24 @@ public:
             return;
         }
         outFile << id << " " << name << " " << contact << " " << gender << " " << age << " " << assignedNurseId << " " << assignedDoctorId << " " << medicineCount;
-        for (int i = 0; i < medicineCount; i++) {
+        outFile << medicine[0];
+        outFile << medicine[1];
+        outFile << medicine[2];
+       /* for (int i = 0; i < medicineCount; i++) {
             outFile << medicine[i];
-        }
+        }*/
         outFile << endl;
         outFile.close();
     }
 
     void readFile(ifstream& inFile) {
         inFile >> id >> name >> contact >> gender >> age >> assignedNurseId >> assignedDoctorId >> medicineCount;
-        for (int i = 0; i < medicineCount; i++) {
+        inFile >> medicine[0];
+        inFile >> medicine[1];
+        inFile >> medicine[2];
+        /*for (int i = 0; i < medicineCount;i++) {
             inFile >> medicine[i];
-        }
+        }*/
     }
 
     static void incrementCount() {
@@ -424,7 +430,7 @@ public:
         doctors[index].setPatientId("P-"+id);
 
         //adding patient to file and array
-        patients[Patient::PatientsCount] = Patient(id,name,gender,contact,age,doctors[index].getID());
+        patients[Patient::PatientsCount] = Patient(id, name, gender, contact, age, doctors[index].getID());
         patients[Patient::PatientsCount].addToFile();
         Patient::incrementCount();
 
