@@ -3,6 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include <windows.h>
+#include <conio.h>
 
 void intro() {
 	gotoline(40, 5);
@@ -66,6 +67,8 @@ private:
 
 	void loginPage() {
 		int i = 4;
+		pass = "";
+		char ch = 'a';
 		system("cls");
 		printHeader();
 		while (1) {
@@ -86,7 +89,10 @@ private:
 			cin >> id;
 			gotoline(49, i + 2);
 			cout << "Password: ";
-			cin >> pass;
+			while ((ch = _getch()) != '\r') {
+				pass += ch;
+				cout << "*";
+			};
 
 			if (validAccount()) {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
@@ -296,10 +302,9 @@ int main() {
 				}
 				else {
 					nurses[index].showAssignedPatients(patients);
-					printf("Press 0 to return to login page...");
-					cin >> choice;
-					if (choice == 0)
-						choice = 2;
+					
+					choice = int(_getch());
+					choice = 2;
 				}
 			} while (choice != 2);
 			break;
