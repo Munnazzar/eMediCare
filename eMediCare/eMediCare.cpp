@@ -5,15 +5,6 @@
 #include <windows.h>
 
 
-void printHeader() {
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 243);
-	gotoline(0, 0);
-	cout << char(220) << char(219) << char(220) << " e-MediCare";
-	gotoline(1, 1);
-	cout << char(223);
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-}
-
 void intro() {
 	gotoline(40, 5);
 	cout << "OBJECT ORIENTED PROGRAMMING PROJECT";

@@ -11,6 +11,15 @@ void gotoline(int x, int y) {
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }
 
+void printHeader() {
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 243);
+    gotoline(0, 0);
+    cout << char(220) << char(219) << char(220) << " e-MediCare";
+    gotoline(1, 1);
+    cout << char(223);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+}
+
 class Person {
 protected:
     string id;
@@ -283,6 +292,40 @@ public:
     static void incrementCount() {
         DoctorsCount++;
     }
+
+    static int printAvailableDoctors(Doctor doctors[], int indexes[]) {
+        system("cls");
+        printHeader();
+        int i = 4, count = 0;
+        gotoline(48, i);
+        cout << "AVAILABLE DOCTORS";
+        gotoline(40, i + 2);
+        cout << "   ID       Name           Gender";
+        gotoline(39, i + 3);
+        cout << "------------------------------------";
+        for (int n = 0;n < DoctorsCount;n++) {
+            if (doctors[n].NoOfPatients < 5) {
+                gotoline(40, i + 4 + count);
+                cout << n + 1;
+                gotoline(43, i + 4 + count);
+                cout << doctors[n].id;
+                gotoline(52, i + 4 + count);
+                cout << doctors[n].name;
+                gotoline(67, i + 4 + count);
+                cout << doctors[n].gender;
+                indexes[count] = n;
+                count++;
+            }
+        }
+        if (count == 0) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(45, i + 5);
+            cout << "No Available Doctors";
+            Sleep(1000);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+        }
+        return count;
+    }
 };
 
 class Admin : public Employee {
@@ -355,25 +398,42 @@ public:
         gotoline(51, i + 7);
         cin >> contact;
 
-        //some way to allow selecting a available doctor for the patient
-        //if (doctor.setPatientId(id)) {
-        //    patients[Patient::PatientsCount] = Patient(id, name, gender, contact, age, doctor.getID());
-        //    patients[Patient::PatientsCount].addToFile();
-        //    Patient::incrementCount();
-        //    return true;
-        //}
-        //return false;
+        int doctorsIndexes[10];
+        int availableDoctors = Doctor::printAvailableDoctors(doctors, doctorsIndexes);
+
+        if (availableDoctors == 0)
+            return false;
+
+        int choice, index;
+        gotoline(40, 10 + availableDoctors);
+        cout << "Select a doctor for the patient: ";
+        cin >> choice;
+        while (choice < 1 || choice > availableDoctors) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(40, 11 + availableDoctors);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(73, 10 + availableDoctors);
+            cout << "                      ";
+            gotoline(73, 10 + availableDoctors);
+            cin >> choice;
+        }
+
+        index = doctorsIndexes[choice - 1];
+        doctors[index].setPatientId("P-" + id);
 
         //adding patient to file and array
-        /*patients[Patient::PatientsCount] = Patient(id, password, name, gender, contact);
+        patients[Patient::PatientsCount] = Patient(id, name, gender, contact, age, doctors[index].getID());
         patients[Patient::PatientsCount].addToFile();
         Patient::incrementCount();
 
         SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
-        gotoline(50, i + 9);
+        gotoline(50, 12 + availableDoctors);
         cout << "RECORD ADDED!";
         Sleep(1000);
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);*/
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+
+        return true;
 
         return true;
     }
