@@ -703,30 +703,30 @@ void storeData(Doctor doctors[], Nurse nurses[], Admin admins[], Patient patient
 
 void notificationFunction(Patient* patients)
 {
-
-    auto now = chrono::system_clock::now();                                // gets the current time from the system clock
-    time_t current_time = chrono::system_clock::to_time_t(now);            /* This line converts the time stored in now to a time_t value, which is a C++ standard library type that represents
-                                                                              a point in time uses the to_time_t function*/
-
-    tm ltm;
-    localtime_s(&ltm, &current_time);
-    string weekdays[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday" };
-    string current_weekday = weekdays[ltm.tm_wday];
-
-
-    // Find index of input weekday in weekdays array
-    int weekday_index = -1;
-    for (int i = 0; i < 7; i++)
-    {
-        if (weekdays[i].compare(current_weekday) == 0)
-        {
-
-            weekday_index = i;
-            break;
-        }
-    }
     while (1) 
     {
+        auto now = chrono::system_clock::now();                                // gets the current time from the system clock
+        time_t current_time = chrono::system_clock::to_time_t(now);            /* This line converts the time stored in now to a time_t value, which is a C++ standard library type that represents
+                                                                                  a point in time uses the to_time_t function*/
+
+        tm ltm;
+        localtime_s(&ltm, &current_time);
+        string weekdays[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday" };
+        string current_weekday = weekdays[ltm.tm_wday];
+
+
+        // Find index of input weekday in weekdays array
+        int weekday_index = -1;
+        for (int i = 0; i < 7; i++)
+        {
+            if (weekdays[i].compare(current_weekday) == 0)
+            {
+
+                weekday_index = i;
+                break;
+            }
+        }
+
         for (int i = 0; i < Patient::PatientsCount; i++)
         {
             for (int j = 0; j < 5; j++)
@@ -739,9 +739,9 @@ void notificationFunction(Patient* patients)
                         string medName = patients[i].medicine[j].getName();
                         string message = "Please Give" + medName + "To " + name;
 
-                        wchar_t* wideMessage = new wchar_t[message.size() + 1];
+                        wchar_t* wideMessage = new wchar_t[message.size() + 1];                                           // The converted wide-character string is stored in the wideMessage buffer
                         size_t numCharsConverted = 0;
-                        mbstowcs_s(&numCharsConverted, wideMessage, message.size() + 1, message.c_str(), message.size());
+                        mbstowcs_s(&numCharsConverted, wideMessage, message.size() + 1, message.c_str(), message.size()); // mbstowcs_s converts the string to wide characters (LPCWSTR)
 
                         // Show the message box
                         MessageBox(NULL, wideMessage, L"Message Box", MB_OK);
