@@ -23,7 +23,7 @@ void intro() {
 	cout << "- Munnazzar Shahzad (22K-4231)";
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 	cout << endl << "\npress any key to continue......";
-	getchar();
+	std::cin.get();
 }
 
 class Login {

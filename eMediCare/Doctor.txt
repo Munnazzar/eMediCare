@@ -1,4 +1,4 @@
-iid2 Drmr.doc2 762 male2 pass2 0
+iid2 Drmr.doc2 762 male2 pass2 1 P-2
 id1 Dr.mr.doc1 7641 male1 pass1 0
 id2 Dr.mr.doc2 7642 male2 pass2 0
 id3 Dr.mr.doc3 7643 male3 pass3 0

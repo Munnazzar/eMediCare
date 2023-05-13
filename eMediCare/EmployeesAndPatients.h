@@ -106,7 +106,7 @@ public:
 
     void readFile(ifstream& inFile) {
         inFile >> id >> name >> contact >> gender >> age >> assignedNurseId >> assignedDoctorId >> medicineCount;
-        for (int i = 0; i < medicineCount;i++) {
+        for (int i = 0; i < medicineCount; i++) {
             inFile >> medicine[i];
         }
     }
@@ -206,6 +206,7 @@ public:
         for (int i = 0; i < NoOfPatients; i++) {
             inFile >> PatientsId[i];
         }
+        return;
     }
 
     //Tells the name and id of assigned patients to a particular nurse
@@ -271,12 +272,12 @@ public:
         outFile << endl;
         outFile.close();
     }
-    bool readFile(ifstream& inFile) {
+    void readFile(ifstream& inFile) {
         inFile >> id >> name >> contact >> gender >> password >> NoOfPatients;
         for (int i = 0; i < NoOfPatients; i++) {
             inFile >> patientsId[i];
         }
-        return true;
+        return ;
     }
 
     //assigns nurse to a particular patient
@@ -605,6 +606,59 @@ bool initializeAll(Doctor doctors[], Nurse nurses[], Admin admins[], Patient pat
         patients[Patient::PatientsCount].readFile(inFile);
     }
     inFile.close();
+
+    /*inFile.open("Doctor.txt", ios::in);
+    for(int i =0 ; i<sizeof("Doctor.txt")/sizeof(Doctor); i++) {
+        Doctor::incrementCount();
+        doctors[Doctor::DoctorsCount].readFile(inFile);
+    }
+    inFile.close();
+
+    inFile.open("Nurse.txt", ios::in);
+    for (int i = 0; i < sizeof("Nurse.txt") / sizeof(Nurse); i++) {
+        Nurse::incrementCount();
+        nurses[Nurse::NursesCount].readFile(inFile);
+    }
+    inFile.close();
+
+    inFile.open("Admin.txt", ios::in);
+    for (int i = 0; i < sizeof("Admin.txt") / sizeof(Admin); i++) {
+        Admin::incrementCount();
+        admins[Admin::AdminsCount].readFile(inFile);
+    }
+    inFile.close();
+
+    inFile.open("Patients.txt", ios::in);
+    for (int i = 0; i < sizeof("Patients.txt") / sizeof(Patient); i++) {
+        Patient::incrementCount();
+        patients[Patient::PatientsCount].readFile(inFile);
+    }
+    inFile.close();*/
+
+    /*inFile.open("Doctor.txt", ios::in);
+    while (doctors[Doctor::DoctorsCount].readFile(inFile)) {
+        Doctor::incrementCount();
+    }
+    inFile.close();
+
+    inFile.open("Nurse.txt", ios::in);
+    while (nurses[Nurse::NursesCount].readFile(inFile)) {
+        Nurse::incrementCount();
+    }
+    inFile.close();
+
+    inFile.open("Admin.txt", ios::in);
+    while (admins[Admin::AdminsCount].readFile(inFile)) {
+        Admin::incrementCount();
+    }
+    inFile.close();
+
+    inFile.open("Patients.txt", ios::in);
+    while (patients[Patient::PatientsCount].readFile(inFile)) {
+        Patient::incrementCount();
+    }
+    inFile.close();*/
+
     return true;
 }
 
