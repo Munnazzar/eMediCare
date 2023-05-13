@@ -4,9 +4,6 @@
 #include <iostream>
 #include <fstream>
 #include <windows.h>
-#include <chrono>
-#include "ReminderFunction.h"
-
 using namespace std;
 
 void gotoline(int x, int y) {
@@ -40,7 +37,9 @@ public:
     string getID() {
         return id;
     }
-
+    string getGender() {
+        return gender;
+    }
     virtual void addToFile() = 0;
 };
 
@@ -130,8 +129,6 @@ public:
         }
     }
 
-    friend void notificationFunction(Patient* patients);
-
     //for testing purposes
     /*void display() {
         cout << "id" << id << endl;
@@ -189,12 +186,8 @@ public:
         std::cout << "id" << id << " name: " << name << "contact: " << contact << " gender: " << gender << " password: " << password << " num:" << NoOfPatients << endl;
     }
 
-    bool setPatientId(string id) {
-        if (NoOfPatients >= 5) { //checking workload
-            return false;
-        }
-        PatientsId[NoOfPatients++] = id;
-        return true;
+    void setPatientId(string id) {
+       PatientsId[NoOfPatients++] = id;
     }
 
     void addToFile() {
@@ -217,7 +210,6 @@ public:
         for (int i = 0; i < NoOfPatients; i++) {
             inFile >> PatientsId[i];
         }
-        return;
     }
 
     //Tells the name and id of assigned patients to a particular nurse
@@ -235,6 +227,40 @@ public:
 
     static void incrementCount() {
         NursesCount++;
+    }
+
+    static int printAvailableNurses(Nurse nurses[], int indexes[]) {
+        system("cls");
+        printHeader();
+        int i = 4, count = 0;
+        gotoline(48, i);
+        cout << "AVAILABLE NURSES";
+        gotoline(40, i + 2);
+        cout << "   ID       Name           Gender";
+        gotoline(39, i + 3);
+        cout << "------------------------------------";
+        for (int n = 0;n < NursesCount;n++) {
+            if (nurses[n].NoOfPatients < 5) {
+                gotoline(40, i + 4 + count);
+                cout << count + 1;
+                gotoline(43, i + 4 + count);
+                cout << nurses[n].id;
+                gotoline(52, i + 4 + count);
+                cout << nurses[n].name;
+                gotoline(67, i + 4 + count);
+                cout << nurses[n].gender;
+                indexes[count] = n;
+                count++;
+            }
+        }
+        if (count == 0) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(45, i + 5);
+            cout << "No Available Nurses";
+            Sleep(1000);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+        }
+        return count;
     }
 };
 
@@ -283,19 +309,98 @@ public:
         outFile << endl;
         outFile.close();
     }
-    void readFile(ifstream& inFile) {
+    bool readFile(ifstream& inFile) {
         inFile >> id >> name >> contact >> gender >> password >> NoOfPatients;
         for (int i = 0; i < NoOfPatients; i++) {
             inFile >> patientsId[i];
         }
-        return ;
+        return true;
     }
 
     //assigns nurse to a particular patient
     bool assignNurse(Nurse& nurse, Patient& patient) {
-        if (nurse.setPatientId(patient.getID())) {
-            //message indication that nurses has been assigned to the patient
-            patient.setNurseID(nurse.getID());
+        nurse.setPatientId(patient.getID());
+        patient.setNurseID(nurse.getID());
+        return true;
+    }
+
+    bool AssignNurse(Patient patients[],Nurse nurses[]) {
+        int patientIndexes[5] = { 0 };
+        int i = 4, count = 0;
+        gotoline(44, i);
+        cout << "Patinets of " << this->name;
+        gotoline(40, i + 2);
+        cout << "   ID       Name           Gender";
+        gotoline(39, i + 3);
+        cout << "------------------------------------";
+        if (NoOfPatients == 0) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(45, i + 5);
+            cout << "No Patients Assigned";
+            Sleep(1000);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 248);
+            return false;
+        }
+
+        for (int n = 0;n < DoctorsCount;n++) {
+            if (patients[n].getDoctorID() == this->id) {
+                gotoline(40, i + 4 + count);
+                cout << count + 1;
+                gotoline(43, i + 4 + count);
+                cout << patients[n].getID();
+                gotoline(52, i + 4 + count);
+                cout << patients[n].getName();
+                gotoline(67, i + 4 + count);
+                cout << patients[n].getGender();
+                patientIndexes[count] = n;
+                count++;
+            }
+        }
+
+        int choice;
+        gotoline(40, 10 + NoOfPatients);
+        cout << "Select a patient: ";
+        cin >> choice;
+        while (choice < 1 || choice > NoOfPatients) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(40, 11 + NoOfPatients);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(59, 10 + NoOfPatients);
+            cout << "                      ";
+            gotoline(59, 10 + NoOfPatients);
+            cin >> choice;
+        }
+
+        int Patientindex = patientIndexes[choice - 1];
+
+        int NursesIndex[10];
+        int availableNurses = Nurse::printAvailableNurses(nurses, NursesIndex);
+        
+        if (availableNurses == 0)
+            return false;
+
+        gotoline(40, 10 + availableNurses);
+        cout << "Select a nurse for the patient: ";
+        cin >> choice;
+        while (choice < 1 || choice > availableNurses) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(40, 11 + availableNurses);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(72, 10 + availableNurses);
+            cout << "                      ";
+            gotoline(72, 10 + availableNurses);
+            cin >> choice;
+        }
+
+        int NurseIndex = NursesIndex[choice - 1];
+        if (assignNurse(nurses[NurseIndex], patients[Patientindex])) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
+            gotoline(50, 12 + availableNurses);
+            cout << "NURSE ASSIGGNED!";
+            Sleep(1000);
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
             return true;
         }
         return false;
@@ -318,7 +423,7 @@ public:
         for (int n = 0;n < DoctorsCount;n++) {
             if (doctors[n].NoOfPatients < 5) {
                 gotoline(40, i + 4 + count);
-                cout << n+1;
+                cout << count+1;
                 gotoline(43, i + 4+count);
                 cout << doctors[n].id;
                 gotoline(52, i + 4+count);
@@ -339,7 +444,34 @@ public:
         return count;
     }
 
- 
+    static int printOptions() {
+        int i = 4;
+        int choice;
+        gotoline(50, i + 1);
+        cout << "1) Assign Nurse to patient";
+        gotoline(50, i + 2);
+        cout << "2) Add Medcine for a patient";
+        gotoline(50, i + 3);
+        cout << "3) Add dosage for a patient";
+        gotoline(50, i + 4);
+        cout << "4) Return to Login page";
+
+        gotoline(47, i + 6);
+        cout << "Select an option: ";
+        cin >> choice;
+
+        while (choice < 1 || choice >4) {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+            gotoline(47, i + 7);
+            printf("Wrong Input!\n");
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            gotoline(65, i + 6);
+            cout << "                      ";
+            gotoline(65, i + 6);
+            cin >> choice;
+        }
+        return choice;
+    }
 };
 
 class Admin : public Employee {
@@ -619,59 +751,6 @@ bool initializeAll(Doctor doctors[], Nurse nurses[], Admin admins[], Patient pat
         patients[Patient::PatientsCount].readFile(inFile);
     }
     inFile.close();
-
-    /*inFile.open("Doctor.txt", ios::in);
-    for(int i =0 ; i<sizeof("Doctor.txt")/sizeof(Doctor); i++) {
-        Doctor::incrementCount();
-        doctors[Doctor::DoctorsCount].readFile(inFile);
-    }
-    inFile.close();
-
-    inFile.open("Nurse.txt", ios::in);
-    for (int i = 0; i < sizeof("Nurse.txt") / sizeof(Nurse); i++) {
-        Nurse::incrementCount();
-        nurses[Nurse::NursesCount].readFile(inFile);
-    }
-    inFile.close();
-
-    inFile.open("Admin.txt", ios::in);
-    for (int i = 0; i < sizeof("Admin.txt") / sizeof(Admin); i++) {
-        Admin::incrementCount();
-        admins[Admin::AdminsCount].readFile(inFile);
-    }
-    inFile.close();
-
-    inFile.open("Patients.txt", ios::in);
-    for (int i = 0; i < sizeof("Patients.txt") / sizeof(Patient); i++) {
-        Patient::incrementCount();
-        patients[Patient::PatientsCount].readFile(inFile);
-    }
-    inFile.close();*/
-
-    /*inFile.open("Doctor.txt", ios::in);
-    while (doctors[Doctor::DoctorsCount].readFile(inFile)) {
-        Doctor::incrementCount();
-    }
-    inFile.close();
-
-    inFile.open("Nurse.txt", ios::in);
-    while (nurses[Nurse::NursesCount].readFile(inFile)) {
-        Nurse::incrementCount();
-    }
-    inFile.close();
-
-    inFile.open("Admin.txt", ios::in);
-    while (admins[Admin::AdminsCount].readFile(inFile)) {
-        Admin::incrementCount();
-    }
-    inFile.close();
-
-    inFile.open("Patients.txt", ios::in);
-    while (patients[Patient::PatientsCount].readFile(inFile)) {
-        Patient::incrementCount();
-    }
-    inFile.close();*/
-
     return true;
 }
 
@@ -698,61 +777,4 @@ void storeData(Doctor doctors[], Nurse nurses[], Admin admins[], Patient patient
     for (int i = 0; i < Patient::PatientsCount; i++) {
         patients[i].addToFile();
     }
-}
-
-
-void notificationFunction(Patient* patients)
-{
-    while (1) 
-    {
-        auto now = chrono::system_clock::now();                                // gets the current time from the system clock
-        time_t current_time = chrono::system_clock::to_time_t(now);            /* This line converts the time stored in now to a time_t value, which is a C++ standard library type that represents
-                                                                                  a point in time uses the to_time_t function*/
-
-        tm ltm;
-        localtime_s(&ltm, &current_time);
-        string weekdays[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday" };
-        string current_weekday = weekdays[ltm.tm_wday];
-
-
-        // Find index of input weekday in weekdays array
-        int weekday_index = -1;
-        for (int i = 0; i < 7; i++)
-        {
-            if (weekdays[i].compare(current_weekday) == 0)
-            {
-
-                weekday_index = i;
-                break;
-            }
-        }
-
-        for (int i = 0; i < Patient::PatientsCount; i++)
-        {
-            for (int j = 0; j < 5; j++)
-            {
-                for (int k = 0; k < 3; k++)
-                {
-                    if (reminder(current_weekday, (patients + i)->medicine[j].dosageTimings[weekday_index][k]))
-                    {
-                        string name = patients[i].getName();
-                        string medName = patients[i].medicine[j].getName();
-                        string message = "Please Give" + medName + "To " + name;
-
-                        wchar_t* wideMessage = new wchar_t[message.size() + 1];                                           // The converted wide-character string is stored in the wideMessage buffer
-                        size_t numCharsConverted = 0;
-                        mbstowcs_s(&numCharsConverted, wideMessage, message.size() + 1, message.c_str(), message.size()); // mbstowcs_s converts the string to wide characters (LPCWSTR)
-
-                        // Show the message box
-                        MessageBox(NULL, wideMessage, L"Message Box", MB_OK);
-
-                        delete[] wideMessage;
-
-                    }
-                }
-            }
-        }
-    }
-    
-
 }
