@@ -91,6 +91,7 @@ private:
 			cin >> id;
 			gotoline(49, i + 2);
 			cout << "Password: ";
+			pass.clear();
 			while ((ch = _getch()) != '\r') {
 				if (ch == '\b') { // backspace key pressed
 					if (pass.length() > 0) {
@@ -312,7 +313,7 @@ int main() {
 				if (nurses[index].getNoOfPatients() == 0) {
 					gotoline(45, 6);
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
-					printf("No patients are assigned to this nurse!\n");
+					cout << "No patients are assigned to this nurse!\n";
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 					Sleep(1000);
 					shouldbreak = true;
@@ -321,7 +322,7 @@ int main() {
 					break;
 				else {
 					nurses[index].showAssignedPatients(patients);
-					printf("Press any key to return to login page...");
+					cout << "Press any key to continue...";
 					choice = int(_getch());
 					choice = 2;
 				}
@@ -354,7 +355,6 @@ int main() {
 		system("cls");
 
 	}
-	cout << patients[0].getDoctorID();
 	storeData(doctors, nurses, admins, patients);
 }
 

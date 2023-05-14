@@ -176,6 +176,7 @@ public:
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
             cout << "No medicines are assigned to this patient!";
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+            Sleep(1000);
             return false;
         }
 
@@ -207,12 +208,14 @@ public:
             cin >> medicineNumber;
         }
 
-        system("cls");
-        printHeader();
+        /*system("cls");
+        printHeader();*/
         string weekday;
-        gotoline(52, i + 1);
+        gotoline(40, 12+medicineCount);
         cout << "Enter Week Day: ";
         cin >> weekday;
+        system("cls");
+        printHeader();
         medicine[medicineNumber - 1].Display(weekday);
 
         /*gotoline(42, i + 3);
