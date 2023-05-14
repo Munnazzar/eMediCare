@@ -112,7 +112,6 @@ public:
 		}
 	}
 
-	unsigned int getID(void) { return this->MedicineID; }
 	string getName(void) { return this->MedicineName; }
 };
 

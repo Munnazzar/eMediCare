@@ -3,7 +3,8 @@
 #include <fstream>
 #include <iostream>
 #include <windows.h>
-#include <conio>
+#include <chrono>
+#include <conio.h>
 #include <thread>
 
 void intro() {

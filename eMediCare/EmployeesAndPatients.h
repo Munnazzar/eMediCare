@@ -1103,11 +1103,9 @@ void notificationFunction(Patient* patients)
             {
                 for (int k = 0; k < 3; k++)
                 {
-                    if (reminder(current_weekday, patients[i].medicine[j].dosageTimings[weekday_index][k]))
+                    if ( reminder(current_weekday, patients[i].medicine[j].dosageTimings[weekday_index][k]) && patients[i].medicine[j].flag[weekday_index][k] == false )
                     {
-                        string name = patients[i].getName();
-                        string medName = patients[i].medicine[j].getName();
-                        string message = "Please Give" + medName + "To " + name;
+                        string message = "Please Give " + patients[i].medicine[j].getName() + " To " + patients[i].getName();
 
                         wchar_t* wideMessage = new wchar_t[message.size() + 1];
                         size_t numCharsConverted = 0;
@@ -1115,6 +1113,8 @@ void notificationFunction(Patient* patients)
 
                         // Show the message box
                         MessageBox(NULL, wideMessage, L"Message Box", MB_OK);
+
+                        patients[i].medicine[j].flag[weekday_index][k] = true;
 
                         delete[] wideMessage;
                     }
