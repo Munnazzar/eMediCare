@@ -326,6 +326,25 @@ int main() {
 					choice = 2;
 				}
 				break;
+
+			case 2:
+				//Give medicine to patients
+				system("cls");
+				printHeader();
+				if (nurses[index].getNoOfPatients() == 0) {
+					gotoline(45, 6);
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+					printf("No patients are assigned to this nurse!\n");
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+					Sleep(1000);
+					shouldbreak = true;
+				}
+				if (shouldbreak)
+					break;
+				else {
+					nurses[index].GiveMedicine(patients);
+				}
+				break;
 			}
 			} while (choice != 2);
 			break;

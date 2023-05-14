@@ -4,7 +4,10 @@
 #include <string>
 #include <fstream>
 #include <string.h>
+#include <conio.h>
+#include <windows.h>
 using namespace std;
+void gotoline(int x, int y);
 
 class MedicineAndDosage {
 private:
@@ -85,6 +88,7 @@ public:
 			if (dosageTimings[indexWeekDay][i] == -1)		//here it checks for all available slots for the current medicine in the dosages array
 			{
 				dosageTimings[indexWeekDay][i] = hours * 60 + minute;  //converts time into minutes and stores it in the respective array
+				flag[indexWeekDay][i] = true;
 				checkForMaxDosages = true;
 				break;
 			}
@@ -110,6 +114,60 @@ public:
 			}
 			cout << endl;
 		}
+	}
+
+	void Display(string weekday) {
+		int k = 4, j=0, l;
+		std::string weekdays[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday","Sunday" };
+		int indexWeekDay=0;
+		for (int i = 0; i < 7; i++) //checking for the given weekday in string and comparing it to the index of "weekdays" array 
+		{
+			if (weekday == weekdays[i])
+			{
+				indexWeekDay = i;		//once given weekday is found, the index for that weekday in the array is stored in "indexWeekDay"
+				break;
+			}
+		}
+		for (int i = 0; i < 7; i++)
+		{
+			if (i == indexWeekDay) {
+				gotoline(53, k + 4);
+				cout << weekdays[i];
+				gotoline(46, k + 5 + j);
+				cout << "-------------------------";
+				gotoline(48, k + 7);
+				cout << "Medicine Id: " << MedicineID;
+				gotoline(48, k + 8);
+				cout << "Medicine Name: " << MedicineName << endl;
+				for (j = 0; j < 3; j++)
+				{
+					if (flag[i][j] != 0) {
+						gotoline(50, k + 9 + j);
+						cout << "SLOT " << j + 1 << ": " << (dosageTimings[i][j] / 60) << ":" << dosageTimings[i][j] - ((dosageTimings[i][j] / 60)*60) << "    Medicine Has Been Given";
+					}
+					else if (dosageTimings[i][j] == -1 && flag[i][j] == 0) {
+						gotoline(50, k + 9 + j);
+						cout << "SLOT " << j+1 << ": " << "Not Alloted" << "    Medicine Not Given";
+					}
+					else if (flag[i][j] == 0) {
+						gotoline(50, k + 9 + j);
+						cout << "SLOT " << j + 1 << ": " << (dosageTimings[i][j] / 60) << ":" << dosageTimings[i][j] - ((dosageTimings[i][j] / 60) * 60) << "    Medicine Not Given";
+					}
+				}
+			}
+			k += j;
+			cout << endl;
+		}
+		gotoline(45, k + j + 2);
+		cout << "Select Dosage: ";
+		cin >> l;
+		flag[indexWeekDay][l - 1] = true;
+		gotoline(45, k + j + 4);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+		printf("You gave the medicine to patient....\n");
+		Sleep(1000);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+		_getch();
 	}
 
 	string getName(void) { return this->MedicineName; }
