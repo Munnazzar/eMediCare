@@ -66,7 +66,7 @@ private:
 	}
 
 	void loginPage() {
-		int i = 4;
+		int i = 4, j=0;
 		pass = "";
 		char ch = 'a';
 		system("cls");
@@ -90,9 +90,18 @@ private:
 			gotoline(49, i + 2);
 			cout << "Password: ";
 			while ((ch = _getch()) != '\r') {
-				pass += ch;
-				cout << "*";
-			};
+				if (ch == '\b') { // backspace key pressed
+					if (pass.length() > 0) {
+						pass.erase(pass.length() - 1, 1); // remove last character
+						cout << "\b \b"; // remove asterisk from output
+					}
+				}
+				else {
+					pass += ch;
+					cout << "*";
+				}
+				
+			}
 
 			if (validAccount()) {
 				SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
@@ -285,9 +294,11 @@ int main() {
 			break;
 		case 3:
 			//nurse
+			do{
 			system("cls");
 			printHeader();
 			choice = Nurse::printOptions();
+			bool shouldbreak = false;
 			switch (choice) {
 			case 1:
 				//show assigned patients
@@ -299,13 +310,18 @@ int main() {
 					printf("No patients are assigned to this nurse!\n");
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
 					Sleep(1000);
+					shouldbreak = true;
 				}
+				if (shouldbreak)
+					break;
 				else {
 					nurses[index].showAssignedPatients(patients);
 					printf("Press any key to return to login page...");
 					choice = int(_getch());
 					choice = 2;
 				}
+				break;
+			}
 			} while (choice != 2);
 			break;
 		case 4:
