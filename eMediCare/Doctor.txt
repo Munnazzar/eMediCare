@@ -1,10 +1,1 @@
-iid2 Drmr.doc2 762 male2 pass2 1 P-2
-id1 Dr.mr.doc1 7641 male1 pass1 0
-id4 Dr.mr.doc4 7644 male4 pass4 0
-id4 Dr.mr.doc4 7644 male4 pass4 0
-Shahid Dr.Dr.Shahid 03184-48235 Male 12345 0
-Shahid Dr.Shahid 1354 Male 694 1 P-123
-D-264 Dr.asdsa dsadsa mlae 2146 2 P-1 P-2
-D-1 Dr.me 032154 male 123 0
-D-123 Dr.dsa dsa dsa 26 2 P-1236 P-65
-D-1 Dr.Frankenstein 03346699634 male doc123 4 P-1 P-2 P-3 P-4
+
