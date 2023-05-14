@@ -168,13 +168,13 @@ public:
 			k += j;
 			cout << endl;
 		}
-		gotoline(45, 17);
+		gotoline(45, 18);
 		cout << "Select Dosage: ";
 		cin >> l;
 
 		if (dosageTimings[indexWeekDay][l - 1] == -1)
 		{
-			gotoline(45, 18);
+			gotoline(45, 19);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
 			cout << "Dosage not allocated to the patient....\n";
 			Sleep(1000);
@@ -184,7 +184,7 @@ public:
 
 		if (flag[indexWeekDay][l - 1] == true)
 		{
-			gotoline(45, 18);
+			gotoline(45, 19);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
 			cout << "Dosage already given to the patient....\n";
 			Sleep(1000);
@@ -193,7 +193,7 @@ public:
 		}
 		else {
 			flag[indexWeekDay][l - 1] = true;
-			gotoline(45, 18);
+			gotoline(45, 19);
 			SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
 			cout << "You gave the medicine to patient....\n";
 			Sleep(1000);
