@@ -293,7 +293,135 @@ int main() {
 				//show assigned patients
 				system("cls");
 				printHeader();
-				if (nurses[index].getNoOfPatients() == 0) {
+				if (!switch (accountType) {
+		case 1:
+			do {
+				system("cls");
+				printHeader();
+				choice = Admin::printOptions();
+				switch (choice) {
+				case 1:
+					//add doctor
+					system("cls");
+					printHeader();
+					if (!admins[index].addDoctor(doctors)) {
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Cannot add another doctor!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				case 2:
+					//add nurse
+					system("cls");
+					printHeader();
+					if (!admins[index].addNurse(nurses)) {
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Cannot add another nurse!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				case 3:
+					//add patient
+					system("cls");
+					printHeader();
+					if (!admins[index].addPatient(patients, doctors)) {
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Cannot add another patient!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				}
+
+			} while (choice != 4);
+			break;
+		case 2:
+			//doctor
+			do {
+				system("cls");
+				printHeader();
+				choice = Doctor::printOptions();
+				switch (choice) {
+				case 1:
+					//assign nurse
+					system("cls");
+					printHeader();
+
+					if (!doctors[index].AssignNurse(patients, nurses)) {
+						system("cls");
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Operation Failed!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				case 2:
+					//add medicine
+					system("cls");
+					printHeader();
+					if (!doctors[index].addMedicine(patients)) {
+						system("cls");
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Operation Failed!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				case 3:
+					//add dosage
+					system("cls");
+					printHeader();
+					if (!doctors[index].addDosage(patients)) {
+						system("cls");
+						gotoline(45, 6);
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+						printf("Operation Failed!\n");
+						SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+						Sleep(1000);
+					}
+					break;
+				}
+
+			} while (choice != 4);
+			//doctor
+			break;
+		case 3:
+			//nurse
+			do{
+			system("cls");
+			printHeader();
+			choice = Nurse::printOptions();
+			switch (choice) {
+			case 1:
+				//show assigned patients
+				system("cls");
+				printHeader();
+				if (!nurses[index].showAssignedPatients(patients)) {
+					gotoline(45, 6);
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
+					printf("No patients are assigned to this nurse!\n");
+					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
+					Sleep(1000);
+				}
+				/*else {
+					nurses[index].showAssignedPatients(patients);
+					printf("Press any key to return to login page...");
+					choice = int(_getch());
+					choice = 2;
+				}*/
+			}
+			} while (choice != 2);
+			break;
+		case 4:
+			continueFlag = false;
+		}) {
 					gotoline(45, 6);
 					SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
 					printf("No patients are assigned to this nurse!\n");
