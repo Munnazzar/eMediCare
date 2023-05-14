@@ -4,7 +4,10 @@
 #include <string>
 #include <fstream>
 #include <string.h>
+#include <conio.h>
 using namespace std;
+
+void gotoline(int x, int y);
 
 class MedicineAndDosage {
 private:
@@ -100,16 +103,21 @@ public:
 
 	
 	void display() {
+		int i = 4;
+		gotoline(40, i + 4);
 		cout << "id: " << MedicineID;
+		gotoline(40, i + 5);
 		cout << ", Name: " << MedicineName << endl;
 		for (int i = 0; i < 7; i++)
 		{
 			for (int j = 0; j < 3; j++)
 			{
+				gotoline(40, i + 7 + j);
 				cout << dosageTimings[i][j] << " " << flag[i][j] << "\t";
 			}
 			cout << endl;
 		}
+		_getch();
 	}
 
 	string getName(void) { return this->MedicineName; }
