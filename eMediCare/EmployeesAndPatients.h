@@ -319,10 +319,7 @@ public:
     }
 
     //Tells the name and id of assigned patients to a particular nurse
-    bool showAssignedPatients(Patient patients[]) {
-        if (NoOfPatients == 0) {
-            return false;
-        }
+    void showAssignedPatients(Patient patients[]) {
         int i = 4, count = 0;
         gotoline(48, i);
         cout << "ASSIGNED PATIENTS";
@@ -346,7 +343,6 @@ public:
             }
         }
         gotoline(40, i + 6 + count);
-        return true;
     }
 
     static void incrementCount() {
