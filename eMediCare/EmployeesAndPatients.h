@@ -164,77 +164,6 @@ public:
         return true;
     }
 
-    bool giveMedicine() {
-        system("cls");
-        printHeader();
-        string weekDay;
-        int hours=0, minutes=0, medicineNumber;
-        int i = 4;
-
-        if (medicineCount == 0) {
-            gotoline(40, i + 2);
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
-            cout << "No medicines are assigned to this patient!";
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-            return false;
-        }
-
-        gotoline(40, i + 2);
-        cout << "   ID    Medicine Name";
-        gotoline(39, i + 3);
-        cout << "-------------------------";
-        for (int n = 0; n < medicineCount; n++) {
-            gotoline(40, i + 4 + n);
-            cout << n + 1;
-            gotoline(43, i + 4 + n);
-            cout << medicine[n].getID();
-            gotoline(52, i + 4 + n);
-            cout << medicine[n].getName();
-        }
-
-        int choice;
-        gotoline(40, 9 + medicineCount);
-        cout << "Select a medicine: ";
-        cin >> medicineNumber;
-        while (medicineNumber < 1 || medicineNumber > medicineCount) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
-            gotoline(40, 10 + medicineCount);
-            printf("Wrong Input!\n");
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-            gotoline(59, 9 + medicineCount);
-            cout << "                      ";
-            gotoline(59, 9 + medicineCount);
-            cin >> medicineNumber;
-        }
-
-        system("cls");
-        printHeader();
-        gotoline(52, i + 1);
-        cout << "Select dosage";
-
-        medicine[medicineNumber - 1].display();
-
-        /*gotoline(42, i + 3);
-        
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-
-        if (!medicine[medicineNumber - 1].addDosage(weekDay, hours, minutes)) {
-            gotoline(42, i + 8);
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
-            cout << "Max dosage reached for this medicine";
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-            Sleep(1000);
-            return false;
-        }
-
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 249);
-        gotoline(52, i + 8);
-        cout << "DOSAGE ADDED SUCCEFULLY!";
-        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-        Sleep(1000);*/
-        return true;
-    }
-
     void addToFile() {
         ofstream outFile;
         outFile.open("Patients.txt", ios::app);
@@ -369,15 +298,14 @@ public:
         gotoline(50, i + 1);
         cout << "1) Show Assigned Patients";
         gotoline(50, i + 2);
-        cout << "2) Give medicine to patient";
+        cout << "2) Return to login page";
         gotoline(50, i + 3);
-        cout << "3) Return to login page";
 
         gotoline(47, i + 6);
         cout << "Select an option: ";
         cin >> choice;
 
-        while (choice < 1 || choice >3) {
+        while (choice < 1 || choice >4) {
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
             gotoline(47, i + 7);
             printf("Wrong Input!\n");
@@ -415,53 +343,6 @@ public:
             }
         }
         gotoline(40, i + 6 + count);
-    }
-
-    void GiveMedicine(Patient patients[]) {
-        int patientIndexes[5] = { 0 };
-        int i = 4, count = 0;
-        gotoline(48, i);
-        cout << "ASSIGNED PATIENTS";
-        gotoline(40, i + 2);
-        cout << "   ID       Name           Gender";
-        gotoline(39, i + 3);
-        cout << "------------------------------------";
-        for (int n = 0; n < NoOfPatients; n++) {
-            for (int k = 0; k < Patient::PatientsCount; k++) {
-                if (PatientsId[n] == patients[k].getID()) {
-                    gotoline(40, i + 4 + count);
-                    cout << count + 1;
-                    gotoline(43, i + 4 + count);
-                    cout << patients[k].getID();
-                    gotoline(52, i + 4 + count);
-                    cout << patients[k].getName();
-                    gotoline(67, i + 4 + count);
-                    cout << patients[k].getGender();
-                    patientIndexes[count] = n;
-                    count++;
-                }
-            }
-        }
-
-        int choice;
-        gotoline(40, 10 + NoOfPatients);
-        cout << "Select a patient: ";
-        cin >> choice;
-        while (choice < 1 || choice > NoOfPatients) {
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 252);
-            gotoline(40, 11 + NoOfPatients);
-            printf("Wrong Input!\n");
-            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), 240);
-            gotoline(59, 10 + NoOfPatients);
-            cout << "                      ";
-            gotoline(59, 10 + NoOfPatients);
-            cin >> choice;
-        }
-
-        int Patientindex = patientIndexes[choice - 1];
-        /*system("cls");
-        printHeader();*/
-        patients[Patientindex].giveMedicine();
     }
 
     static void incrementCount() {
