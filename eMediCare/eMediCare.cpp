@@ -346,7 +346,7 @@ int main() {
 				}
 				break;
 			}
-			} while (choice != 2);
+			} while (choice != 3);
 			break;
 		case 4:
 			continueFlag = false;

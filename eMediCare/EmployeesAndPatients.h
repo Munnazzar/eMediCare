@@ -371,9 +371,9 @@ public:
         gotoline(50, i + 1);
         cout << "1) Show Assigned Patients";
         gotoline(50, i + 2);
-        cout << "2) Return to login page";
+        cout << "2) Give Medicine To Patient";
         gotoline(50, i + 3);
-
+        cout << "3) Return to login page";
         gotoline(47, i + 6);
         cout << "Select an option: ";
         cin >> choice;
